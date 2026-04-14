@@ -1,21 +1,24 @@
 import { useState, useEffect } from 'react'
 import { supabase } from '../../lib/supabase'
+import { useVillage } from '../../contexts/VillageContext'
 import { Users, FileText, Store, Eye, TrendingUp, Clock, CheckCircle, XCircle } from 'lucide-react'
 
 export default function Dashboard() {
   const [stats, setStats] = useState({ users: 0, pendingSurat: 0, umkm: 0, news: 0 })
   const [recentSurat, setRecentSurat] = useState([])
   const [recentUsers, setRecentUsers] = useState([])
+  const { villageId, villageName } = useVillage()
 
   useEffect(() => {
+    if (!villageId) return
     async function fetch() {
       const [usersRes, suratRes, umkmRes, newsRes, recentSuratRes, recentUsersRes] = await Promise.all([
-        supabase.from('profiles').select('id', { count: 'exact', head: true }),
-        supabase.from('surat_submissions').select('id', { count: 'exact', head: true }).eq('status', 'pending'),
-        supabase.from('umkm_products').select('id', { count: 'exact', head: true }).eq('is_active', true),
-        supabase.from('news').select('id', { count: 'exact', head: true }).eq('is_published', true),
-        supabase.from('surat_submissions').select('*').order('created_at', { ascending: false }).limit(5),
-        supabase.from('profiles').select('*').order('created_at', { ascending: false }).limit(5),
+        supabase.from('profiles').select('id', { count: 'exact', head: true }).eq('village_id', villageId),
+        supabase.from('surat_submissions').select('id', { count: 'exact', head: true }).eq('status', 'pending').eq('village_id', villageId),
+        supabase.from('umkm_products').select('id', { count: 'exact', head: true }).eq('is_active', true).eq('village_id', villageId),
+        supabase.from('news').select('id', { count: 'exact', head: true }).eq('is_published', true).eq('village_id', villageId),
+        supabase.from('surat_submissions').select('*').eq('village_id', villageId).order('created_at', { ascending: false }).limit(5),
+        supabase.from('profiles').select('*').eq('village_id', villageId).order('created_at', { ascending: false }).limit(5),
       ])
       setStats({
         users: usersRes.count || 0,
@@ -27,7 +30,7 @@ export default function Dashboard() {
       if (recentUsersRes.data) setRecentUsers(recentUsersRes.data)
     }
     fetch()
-  }, [])
+  }, [villageId])
 
   const statCards = [
     { icon: Users, label: 'Total Users', value: stats.users, color: 'var(--primary)', bg: 'var(--primary-bg)' },
@@ -45,7 +48,7 @@ export default function Dashboard() {
     <div className="page-enter">
       <div style={{ marginBottom: '2rem' }}>
         <h1 style={{ fontSize: 'var(--font-size-3xl)', marginBottom: '0.5rem' }}>Dashboard</h1>
-        <p style={{ color: 'var(--text-secondary)' }}>Selamat datang di panel admin KepuhConnect</p>
+        <p style={{ color: 'var(--text-secondary)' }}>Selamat datang di panel admin {villageName || 'NusaDesa'}</p>
       </div>
 
       {/* Stats */}

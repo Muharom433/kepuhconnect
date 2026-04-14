@@ -1,18 +1,25 @@
 import { useState, useEffect } from 'react'
 import { supabase } from '../../lib/supabase'
 import { useAuth } from '../../contexts/AuthContext'
+import { useVillage } from '../../contexts/VillageContext'
 import { Users, Shield, Search, UserCheck, UserX, ShieldAlert } from 'lucide-react'
 
 export default function UsersManage() {
   const { profile: currentAdmin } = useAuth()
+  const { villageId } = useVillage()
   const [users, setUsers] = useState([])
   const [search, setSearch] = useState('')
   const [filter, setFilter] = useState('all')
 
-  useEffect(() => { fetchData() }, [])
+  useEffect(() => { if (villageId) fetchData() }, [villageId])
 
   async function fetchData() {
-    const { data } = await supabase.from('profiles').select('*').order('created_at', { ascending: false })
+    const { data } = await supabase
+      .from('profiles')
+      .select('*')
+      .eq('village_id', villageId)
+      .neq('role', 'super_admin') // Jangan tampilkan super admin
+      .order('created_at', { ascending: false })
     if (data) setUsers(data)
   }
 

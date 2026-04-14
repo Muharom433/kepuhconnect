@@ -1,68 +1,70 @@
 import { Link } from 'react-router-dom'
+import { useVillage } from '../contexts/VillageContext'
 import { MapPin, Phone, Mail, ExternalLink } from 'lucide-react'
 import './Footer.css'
 
 export default function Footer() {
+  const { villageSlug, villageName, village } = useVillage()
+  const base = `/${villageSlug}`
+
+  // Singkatan untuk logo
+  const logoText = villageName
+    ? villageName.split(' ').map(w => w[0]).join('').substring(0, 2).toUpperCase()
+    : 'ND'
+
   return (
     <footer className="footer">
       <div className="container-lg">
         <div className="footer-grid">
           <div className="footer-brand">
             <div className="flex gap-sm" style={{ marginBottom: '1rem' }}>
-              <div className="navbar-logo" style={{ width: 44, height: 44 }}>KC</div>
+              <div className="navbar-logo" style={{ width: 44, height: 44 }}>{logoText}</div>
               <div>
-                <h3 style={{ fontSize: '1.25rem' }}>KepuhConnect</h3>
-                <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>Padukuhan Kepuh</p>
+                <h3 style={{ fontSize: '1.25rem' }}>{villageName || 'NusaDesa'}</h3>
+                <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>{village?.village_type || 'Platform Desa Digital'}</p>
               </div>
             </div>
             <p className="footer-desc">
-              Transformasi digital untuk pelayanan masyarakat yang lebih baik.
-              Website resmi Padukuhan Kepuh, Desa Pacarejo, Kapanewon Semanu, Gunung Kidul.
+              {village?.full_address
+                ? `Website resmi ${villageName}. ${village.full_address}.`
+                : 'Transformasi digital untuk pelayanan masyarakat yang lebih baik.'
+              }
             </p>
           </div>
 
           <div className="footer-links-group">
             <h4 className="footer-title">Navigasi</h4>
             <ul>
-              <li><Link to="/">Beranda</Link></li>
-              <li><Link to="/profil">Profil Desa</Link></li>
-              <li><Link to="/berita">Berita</Link></li>
-              <li><Link to="/ekonomi">Ekonomi</Link></li>
-              <li><Link to="/kontak">Kontak</Link></li>
+              <li><Link to={base}>Beranda</Link></li>
+              <li><Link to={`${base}/profil`}>Profil Desa</Link></li>
+              <li><Link to={`${base}/berita`}>Berita</Link></li>
+              <li><Link to={`${base}/ekonomi`}>Ekonomi</Link></li>
+              <li><Link to={`${base}/kontak`}>Kontak</Link></li>
             </ul>
           </div>
 
           <div className="footer-links-group">
             <h4 className="footer-title">Layanan</h4>
             <ul>
-              <li><Link to="/layanan/surat">Formulir Surat</Link></li>
-              <li><Link to="/layanan/status">Status Permohonan</Link></li>
-              <li><Link to="/layanan/persyaratan">Info Persyaratan</Link></li>
-              <li><Link to="/ekonomi">Katalog UMKM</Link></li>
+              <li><Link to={`${base}/layanan/surat`}>Formulir Surat</Link></li>
+              <li><Link to={`${base}/layanan/status`}>Status Permohonan</Link></li>
+              <li><Link to={`${base}/layanan/persyaratan`}>Info Persyaratan</Link></li>
+              <li><Link to={`${base}/ekonomi`}>Katalog UMKM</Link></li>
             </ul>
           </div>
 
           <div className="footer-links-group">
-            <h4 className="footer-title">Kontak</h4>
-            <ul className="footer-contact">
-              <li>
-                <MapPin size={16} />
-                <span>Padukuhan Kepuh, Desa Pacarejo, Kapanewon Semanu, Gunung Kidul, D.I. Yogyakarta</span>
-              </li>
-              <li>
-                <Phone size={16} />
-                <span>(0231) 123456</span>
-              </li>
-              <li>
-                <Mail size={16} />
-                <span>info@desakepuh.id</span>
-              </li>
+            <h4 className="footer-title">Platform</h4>
+            <ul>
+              <li><Link to="/">Tentang NusaDesa</Link></li>
+              <li><Link to="/syarat-ketentuan">Syarat & Ketentuan</Link></li>
+              <li><Link to="/daftar-desa">Daftarkan Desa</Link></li>
             </ul>
           </div>
         </div>
 
         <div className="footer-bottom">
-          <p>&copy; {new Date().getFullYear()} KepuhConnect — Website Padukuhan Kepuh. All rights reserved.</p>
+          <p>&copy; {new Date().getFullYear()} NusaDesa — {villageName || 'Platform Desa Digital Indonesia'}. All rights reserved.</p>
           <p className="footer-credit">
             Dibuat dengan ❤️ untuk kemajuan desa
           </p>

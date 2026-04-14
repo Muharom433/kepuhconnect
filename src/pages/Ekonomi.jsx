@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { supabase } from '../lib/supabase'
+import { useVillage } from '../contexts/VillageContext'
 import { Store, Home, Search, MapPin, Phone, Filter } from 'lucide-react'
 
 export default function Ekonomi() {
@@ -8,18 +9,20 @@ export default function Ekonomi() {
   const [kost, setKost] = useState([])
   const [search, setSearch] = useState('')
   const [categoryFilter, setCategoryFilter] = useState('all')
+  const { villageId } = useVillage()
 
   useEffect(() => {
+    if (!villageId) return
     async function fetch() {
       const [umkmRes, kostRes] = await Promise.all([
-        supabase.from('umkm_products').select('*').eq('is_active', true),
-        supabase.from('kost_listings').select('*').eq('is_active', true),
+        supabase.from('umkm_products').select('*').eq('is_active', true).eq('village_id', villageId),
+        supabase.from('kost_listings').select('*').eq('is_active', true).eq('village_id', villageId),
       ])
       if (umkmRes.data) setUmkm(umkmRes.data)
       if (kostRes.data) setKost(kostRes.data)
     }
     fetch()
-  }, [])
+  }, [villageId])
 
   const defaultUmkm = [
     { id: 1, name: 'Batik Kepuh Motif Mega Mendung', price: 350000, category: 'Kerajinan', owner_name: 'Ibu Siti', contact: '081234567890', description: 'Batik tulis khas Padukuhan Kepuh' },

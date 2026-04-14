@@ -1,24 +1,28 @@
 import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { supabase } from '../lib/supabase'
+import { useVillage } from '../contexts/VillageContext'
 import { Newspaper, Search } from 'lucide-react'
 
 export default function Berita() {
   const [news, setNews] = useState([])
   const [search, setSearch] = useState('')
   const [category, setCategory] = useState('all')
+  const { villageId, villageSlug } = useVillage()
 
   useEffect(() => {
+    if (!villageId) return
     async function fetch() {
       const { data } = await supabase
         .from('news')
         .select('*')
         .eq('is_published', true)
+        .eq('village_id', villageId)
         .order('published_at', { ascending: false })
       if (data) setNews(data)
     }
     fetch()
-  }, [])
+  }, [villageId])
 
   const defaultNews = [
     { id: '1', title: 'Program Digitalisasi Desa Kepuh Resmi Diluncurkan', slug: 'program-digitalisasi-desa-kepuh', excerpt: 'Desa Kepuh meluncurkan program digitalisasi untuk meningkatkan pelayanan publik.', category: 'pengumuman', published_at: new Date().toISOString() },
@@ -86,7 +90,7 @@ export default function Berita() {
           ) : (
             <div className="grid grid-3">
               {filtered.map(item => (
-                <Link to={`/berita/${item.slug}`} key={item.id} className="card">
+                <Link to={`/${villageSlug}/berita/${item.slug}`} key={item.id} className="card">
                   <div className="card-img" style={{ background: 'linear-gradient(135deg, var(--primary-bg), var(--primary-lighter))' }}>
                     <div className="flex-center" style={{ height: '100%' }}>
                       <Newspaper size={40} style={{ color: 'var(--primary-light)' }} />

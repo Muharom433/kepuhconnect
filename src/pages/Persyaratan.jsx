@@ -1,17 +1,20 @@
 import { useState, useEffect } from 'react'
 import { supabase } from '../lib/supabase'
+import { useVillage } from '../contexts/VillageContext'
 import { Info, FileText, CheckCircle } from 'lucide-react'
 
 export default function Persyaratan() {
   const [suratTypes, setSuratTypes] = useState([])
+  const { villageId } = useVillage()
 
   useEffect(() => {
+    if (!villageId) return
     async function fetch() {
-      const { data } = await supabase.from('surat_types').select('*').eq('is_active', true)
+      const { data } = await supabase.from('surat_types').select('*').eq('is_active', true).eq('village_id', villageId)
       if (data) setSuratTypes(data)
     }
     fetch()
-  }, [])
+  }, [villageId])
 
   const defaultTypes = [
     { id: 1, name: 'Surat Keterangan Domisili', description: 'Surat yang menerangkan domisili/tempat tinggal seseorang', requirements: 'KTP, KK, Pas Foto 3x4' },

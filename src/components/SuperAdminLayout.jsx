@@ -1,39 +1,28 @@
 import { Navigate, Outlet, Link, useLocation } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
-import { VillageProvider, useVillage } from '../contexts/VillageContext'
 import {
-  LayoutDashboard, Database, FileText, Store,
-  Home, Users, LogOut, Menu, X, ChevronLeft, UserSquare
+  LayoutDashboard, Globe, Users, LogOut, Menu, ChevronLeft, Settings, Shield
 } from 'lucide-react'
 import { useState } from 'react'
 import './AdminLayout.css'
 
-function AdminLayoutInner() {
-  const { isAdmin, isSuperAdmin, profile, signOut, loading } = useAuth()
-  const { villageSlug, villageName, village, villageId } = useVillage()
+const sidebarLinks = [
+  { label: 'Dashboard', path: '/superadmin', icon: LayoutDashboard, exact: true },
+  { label: 'Kelola Desa', path: '/superadmin/villages', icon: Globe },
+  { label: 'Semua Users', path: '/superadmin/users', icon: Users },
+]
+
+export default function SuperAdminLayout() {
+  const { isSuperAdmin, profile, signOut, loading } = useAuth()
   const [collapsed, setCollapsed] = useState(false)
   const location = useLocation()
-
-  const base = `/${villageSlug}/admin`
-
-  const sidebarLinks = [
-    { label: 'Dashboard', path: base, icon: LayoutDashboard, exact: true },
-    { label: 'Manajemen Data', path: `${base}/data`, icon: Database },
-    { label: 'Kelola Persuratan', path: `${base}/persuratan`, icon: FileText },
-    { label: 'Kelola UMKM', path: `${base}/umkm`, icon: Store },
-    { label: 'Kelola Beranda', path: `${base}/beranda`, icon: Home },
-    { label: 'Kependudukan', path: `${base}/penduduk`, icon: UserSquare },
-    { label: 'Kelola Users', path: `${base}/users`, icon: Users },
-  ]
 
   if (loading) {
     return <div className="loading-screen"><div className="spinner"></div></div>
   }
 
-  // Super admin bisa akses admin panel desa manapun
-  const canAccess = isSuperAdmin || (isAdmin && profile?.village_id === villageId)
-  if (!canAccess) {
-    return <Navigate to={`/${villageSlug}/login`} replace />
+  if (!isSuperAdmin) {
+    return <Navigate to="/login" replace />
   }
 
   const isActive = (path, exact) => {
@@ -41,21 +30,18 @@ function AdminLayoutInner() {
     return location.pathname.startsWith(path)
   }
 
-  // Singkatan logo desa
-  const logoText = villageName
-    ? villageName.split(' ').map(w => w[0]).join('').substring(0, 2).toUpperCase()
-    : 'ND'
-
   return (
     <div className="admin-layout">
       <aside className={`admin-sidebar ${collapsed ? 'collapsed' : ''}`}>
         <div className="admin-sidebar-header">
-          <Link to={`/${villageSlug}`} className="admin-logo">
-            <div className="navbar-logo">{logoText}</div>
+          <Link to="/" className="admin-logo">
+            <div className="navbar-logo" style={{ background: 'linear-gradient(135deg, #7c3aed, #5b21b6)' }}>
+              <Shield size={16} />
+            </div>
             {!collapsed && (
               <div>
-                <div style={{ fontWeight: 700, fontSize: '0.95rem', color: 'white' }}>{villageName || 'NusaDesa'}</div>
-                <div style={{ fontSize: '0.65rem', color: 'rgba(255,255,255,0.5)' }}>Admin Panel</div>
+                <div style={{ fontWeight: 700, fontSize: '0.95rem', color: 'white' }}>NusaDesa</div>
+                <div style={{ fontSize: '0.65rem', color: 'rgba(255,255,255,0.5)' }}>Super Admin</div>
               </div>
             )}
           </Link>
@@ -80,16 +66,14 @@ function AdminLayoutInner() {
         <div className="admin-sidebar-footer">
           <div className="admin-user-info">
             <div className="navbar-avatar" style={{ width: 32, height: 32 }}>
-              <Users size={16} />
+              <Shield size={16} />
             </div>
             {!collapsed && (
               <div>
                 <div style={{ fontWeight: 600, fontSize: '0.825rem', color: 'white' }}>
                   {profile?.first_name} {profile?.last_name}
                 </div>
-                <div style={{ fontSize: '0.7rem', color: 'rgba(255,255,255,0.45)' }}>
-                  {isSuperAdmin ? 'Super Admin' : 'Admin'}
-                </div>
+                <div style={{ fontSize: '0.7rem', color: 'rgba(255,255,255,0.45)' }}>Super Admin</div>
               </div>
             )}
           </div>
@@ -104,14 +88,5 @@ function AdminLayoutInner() {
         <Outlet />
       </div>
     </div>
-  )
-}
-
-// Wrap dengan VillageProvider karena AdminLayout hidup di route /:villageSlug/admin
-export default function AdminLayout() {
-  return (
-    <VillageProvider>
-      <AdminLayoutInner />
-    </VillageProvider>
   )
 }

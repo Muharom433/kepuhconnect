@@ -9,11 +9,29 @@ export default function Login() {
   const [error, setError] = useState('')
   const [errorType, setErrorType] = useState('') // 'unverified' | 'invalid' | 'general'
   const [loading, setLoading] = useState(false)
-  const { signIn, isLoggedIn } = useAuth()
+  const { signIn, isLoggedIn, isSuperAdmin, profile } = useAuth()
   const navigate = useNavigate()
 
-  if (isLoggedIn) {
-    navigate('/')
+  // Cek apakah kita di context desa (/:villageSlug/login) atau platform (/login)
+  // Ini bisa dideteksi dari useVillage, tapi Login juga dipake di PlatformLayout
+  // Jadi kita cek profile setelah login untuk redirect
+
+  if (isLoggedIn && profile) {
+    // Redirect berdasarkan role
+    if (isSuperAdmin) {
+      navigate('/superadmin', { replace: true })
+      return null
+    }
+    if (profile.villages?.slug) {
+      if (profile.role === 'admin') {
+        navigate(`/${profile.villages.slug}/admin`, { replace: true })
+      } else {
+        navigate(`/${profile.villages.slug}`, { replace: true })
+      }
+      return null
+    }
+    // Jika user tidak punya village, arahkan ke homepage
+    navigate('/', { replace: true })
     return null
   }
 
@@ -24,7 +42,9 @@ export default function Login() {
     setLoading(true)
     try {
       await signIn({ email, password })
-      navigate('/')
+      // Redirect akan ditangani oleh useEffect di atas setelah profile ter-load
+      // Tapi kita juga perlu handle immediate redirect utk UX
+      // Profile akan di-fetch oleh AuthContext, lalu re-render komponen ini
     } catch (err) {
       if (err.message === 'BELUM_VERIFIKASI') {
         setErrorType('unverified')
@@ -48,9 +68,9 @@ export default function Login() {
     <div className="page-enter" style={{ minHeight: '80vh', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '3rem 1rem', background: 'var(--bg-alt)' }}>
       <div style={{ maxWidth: 440, width: '100%' }}>
         <div className="text-center" style={{ marginBottom: '2rem' }}>
-          <div className="navbar-logo" style={{ width: 56, height: 56, fontSize: '1.2rem', margin: '0 auto 1rem' }}>KC</div>
+          <div className="navbar-logo" style={{ width: 56, height: 56, fontSize: '1.2rem', margin: '0 auto 1rem', background: 'linear-gradient(135deg, #1a6b3c, #2d9254)' }}>ND</div>
           <h2>Selamat Datang</h2>
-          <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem' }}>Masuk ke akun KepuhConnect Anda</p>
+          <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem' }}>Masuk ke akun NusaDesa Anda</p>
         </div>
 
         <div className="card-flat" style={{ padding: '2rem' }}>
@@ -67,7 +87,7 @@ export default function Login() {
                 <strong style={{ color: '#92400E', fontSize: '0.9rem' }}>Akun Menunggu Verifikasi Admin</strong>
               </div>
               <p style={{ fontSize: '0.825rem', color: '#78350F', lineHeight: 1.6, margin: 0 }}>
-                Akun Anda sudah terdaftar, namun belum diverifikasi oleh admin padukuhan.
+                Akun Anda sudah terdaftar, namun belum diverifikasi oleh admin.
                 Harap tunggu konfirmasi dari admin sebelum bisa masuk.
               </p>
               <div style={{ marginTop: '0.75rem', display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.775rem', color: '#92400E' }}>
@@ -132,10 +152,6 @@ export default function Login() {
               }
             </button>
           </form>
-
-          <p style={{ textAlign: 'center', marginTop: '1.5rem', fontSize: '0.875rem', color: 'var(--text-secondary)' }}>
-            Belum punya akun? <Link to="/signup" style={{ color: 'var(--primary)', fontWeight: 600 }}>Daftar Sekarang</Link>
-          </p>
         </div>
       </div>
     </div>

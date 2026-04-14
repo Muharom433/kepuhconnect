@@ -1,22 +1,28 @@
 import { useState, useEffect } from 'react'
 import { supabase } from '../../lib/supabase'
+import { useVillage } from '../../contexts/VillageContext'
 import { Store, Plus, Edit2, Trash2, Save, X, ToggleLeft, ToggleRight } from 'lucide-react'
 
 export default function UmkmManage() {
   const [products, setProducts] = useState([])
   const [editing, setEditing] = useState(null)
   const [form, setForm] = useState({ name: '', description: '', price: '', category: '', owner_name: '', contact: '' })
+  const { villageId } = useVillage()
 
-  useEffect(() => { fetchData() }, [])
+  useEffect(() => { if (villageId) fetchData() }, [villageId])
 
   async function fetchData() {
-    const { data } = await supabase.from('umkm_products').select('*').order('created_at', { ascending: false })
+    const { data } = await supabase
+      .from('umkm_products')
+      .select('*')
+      .eq('village_id', villageId)
+      .order('created_at', { ascending: false })
     if (data) setProducts(data)
   }
 
   async function handleSave() {
-    const payload = { ...form, price: parseInt(form.price) || 0, is_active: true }
-    if (editing) {
+    const payload = { ...form, price: parseInt(form.price) || 0, is_active: true, village_id: villageId }
+    if (editing && editing !== 'new') {
       await supabase.from('umkm_products').update(payload).eq('id', editing)
     } else {
       await supabase.from('umkm_products').insert(payload)

@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import { supabase } from '../../lib/supabase'
+import { useVillage } from '../../contexts/VillageContext'
 import { Save, Edit2, ExternalLink, RefreshCw } from 'lucide-react'
 
 export default function BerandaManage() {
@@ -7,6 +8,7 @@ export default function BerandaManage() {
   const [editing, setEditing] = useState(null)
   const [editValue, setEditValue] = useState('')
   const [saving, setSaving] = useState(false)
+  const { villageId, villageSlug } = useVillage()
   
   // Ref array untuk iframe preview
   const iframeRef = useRef()
@@ -21,10 +23,10 @@ export default function BerandaManage() {
 
   const defaultHeroImage = 'https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?q=80&w=1920&auto=format&fit=crop'
 
-  useEffect(() => { fetchData() }, [])
+  useEffect(() => { if (villageId) fetchData() }, [villageId])
 
   async function fetchData() {
-    const { data } = await supabase.from('village_info').select('*')
+    const { data } = await supabase.from('village_info').select('*').eq('village_id', villageId)
     if (data) setVillageInfo(data.filter(i => berandaKeys.includes(i.key)))
   }
 
@@ -33,7 +35,7 @@ export default function BerandaManage() {
     if (id) {
       await supabase.from('village_info').update({ value: editValue, updated_at: new Date().toISOString() }).eq('id', id)
     } else {
-      await supabase.from('village_info').insert({ key, value: editValue })
+      await supabase.from('village_info').insert({ key, value: editValue, village_id: villageId })
     }
     await fetchData()
     setEditing(null)
@@ -51,7 +53,7 @@ export default function BerandaManage() {
           <h1 style={{ fontSize: 'var(--font-size-3xl)', marginBottom: '0.25rem' }}>Kelola Beranda</h1>
           <p style={{ color: 'var(--text-secondary)' }}>Edit konten yang ditampilkan di halaman utama</p>
         </div>
-        <button className="btn btn-outline" onClick={() => iframeRef.current && (iframeRef.current.src = iframeRef.current.src)}>
+        <button className="btn btn-outline" onClick={() => iframeRef.current && (iframeRef.current.src = `/${villageSlug}`)}>
           <RefreshCw size={14} /> Segarkan Preview
         </button>
       </div>
@@ -59,14 +61,14 @@ export default function BerandaManage() {
       {/* ── Preview Halaman Beranda ── */}
       <div className="card-flat" style={{ marginBottom: '1.5rem', padding: '0.5rem', background: '#e0e0e0', border: '2px solid var(--border-light)' }}>
          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0.25rem 0.5rem 0.5rem' }}>
-           <span style={{ fontSize: '0.75rem', fontWeight: 700, color: '#555', textTransform: 'uppercase' }}>Preview Beranda Publik</span>
-           <a href="/" target="_blank" rel="noreferrer" style={{ fontSize: '0.75rem', color: 'var(--primary)', display: 'flex', alignItems: 'center', gap: 4, textDecoration: 'none', fontWeight: 600 }}>
+           <span style={{ fontSize: '0.75rem', fontWeight: 700, color: '#555', textTransform: 'uppercase' }}>Preview Beranda</span>
+           <a href={`/${villageSlug}`} target="_blank" rel="noreferrer" style={{ fontSize: '0.75rem', color: 'var(--primary)', display: 'flex', alignItems: 'center', gap: 4, textDecoration: 'none', fontWeight: 600 }}>
              Buka Tab Baru <ExternalLink size={12} />
            </a>
          </div>
          <iframe 
            ref={iframeRef}
-           src="/" 
+           src={villageSlug ? `/${villageSlug}` : '/'} 
            title="Preview"
            style={{
              width: '100%',

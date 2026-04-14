@@ -1,9 +1,11 @@
 import { Link, Navigate } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
+import { useVillage } from '../contexts/VillageContext'
 import { FileText, ClipboardList, Info, AlertTriangle, CheckCircle, Lock } from 'lucide-react'
 
 export default function Layanan() {
   const { isLoggedIn, isVerified } = useAuth()
+  const { villageSlug } = useVillage()
 
   if (!isLoggedIn) {
     return (
@@ -12,7 +14,7 @@ export default function Layanan() {
           <Lock size={48} style={{ color: 'var(--text-muted)', marginBottom: '1rem' }} />
           <h2 style={{ marginBottom: '0.5rem' }}>Login Diperlukan</h2>
           <p style={{ color: 'var(--text-secondary)', marginBottom: '1.5rem' }}>Anda harus masuk untuk mengakses layanan desa</p>
-          <Link to="/login" className="btn btn-primary">Masuk</Link>
+          <Link to={`/${villageSlug}/login`} className="btn btn-primary">Masuk</Link>
         </div>
       </div>
     )
@@ -36,9 +38,9 @@ export default function Layanan() {
   }
 
   const services = [
-    { icon: FileText, title: 'Formulir Surat', desc: 'Ajukan permohonan surat administrasi secara online', path: '/layanan/surat', color: 'var(--primary)' },
-    { icon: ClipboardList, title: 'Status Permohonan', desc: 'Pantau status permohonan surat Anda', path: '/layanan/status', color: 'var(--info)' },
-    { icon: Info, title: 'Info Persyaratan', desc: 'Informasi persyaratan dokumen untuk setiap jenis surat', path: '/layanan/persyaratan', color: 'var(--accent-dark)' },
+    { icon: FileText, title: 'Formulir Surat', desc: 'Ajukan permohonan surat administrasi secara online', path: `/${villageSlug}/layanan/surat`, color: 'var(--primary)' },
+    { icon: ClipboardList, title: 'Status Permohonan', desc: 'Pantau status permohonan surat Anda', path: `/${villageSlug}/layanan/status`, color: 'var(--info)' },
+    { icon: Info, title: 'Info Persyaratan', desc: 'Informasi persyaratan dokumen untuk setiap jenis surat', path: `/${villageSlug}/layanan/persyaratan`, color: 'var(--accent-dark)' },
   ]
 
   return (

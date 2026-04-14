@@ -1,18 +1,22 @@
 import { useState, useEffect } from 'react'
 import { supabase } from '../lib/supabase'
+import { useVillage } from '../contexts/VillageContext'
 import { Target, Eye, Award } from 'lucide-react'
 import SimpleOrgChart from '../components/SimpleOrgChart'
 
 export default function Profil() {
   const [villageInfo, setVillageInfo] = useState({})
   const [jabatanRaw, setJabatanRaw] = useState([])
+  const { villageId } = useVillage()
 
   useEffect(() => {
+    if (!villageId) return
     async function fetch() {
       const [infoRes, structRes] = await Promise.all([
-        supabase.from('village_info').select('*'),
+        supabase.from('village_info').select('*').eq('village_id', villageId),
         supabase.from('village_structure')
           .select('*, profiles(id, first_name, last_name, avatar_url)')
+          .eq('village_id', villageId)
           .order('sort_order'),
       ])
       if (infoRes.data) {
@@ -25,7 +29,7 @@ export default function Profil() {
       }
     }
     fetch()
-  }, [])
+  }, [villageId])
 
   const visi = villageInfo.visi || 'Mewujudkan Padukuhan Kepuh yang Mandiri, Sejahtera, dan Berbudaya melalui Tata Kelola Pemerintahan yang Baik dan Partisipasi Aktif Masyarakat'
   const misi = villageInfo.misi || '1. Meningkatkan kualitas pelayanan publik\n2. Mengembangkan potensi ekonomi lokal\n3. Meningkatkan kualitas SDM\n4. Melestarikan budaya lokal\n5. Mewujudkan infrastruktur memadai'

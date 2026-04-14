@@ -1,11 +1,13 @@
 import { useState, useEffect } from 'react'
 import { useAuth } from '../contexts/AuthContext'
+import { useVillage } from '../contexts/VillageContext'
 import { supabase } from '../lib/supabase'
 import { Link, Navigate } from 'react-router-dom'
 import { FileText, Send, CheckCircle, Lock } from 'lucide-react'
 
 export default function FormulirSurat() {
   const { isLoggedIn, isVerified, profile } = useAuth()
+  const { villageId, villageSlug } = useVillage()
   const [suratTypes, setSuratTypes] = useState([])
   const [selectedType, setSelectedType] = useState('')
   const [formData, setFormData] = useState({ keperluan: '', keterangan: '' })
@@ -14,14 +16,14 @@ export default function FormulirSurat() {
 
   useEffect(() => {
     async function fetch() {
-      const { data } = await supabase.from('surat_types').select('*').eq('is_active', true)
+      const { data } = await supabase.from('surat_types').select('*').eq('is_active', true).eq('village_id', villageId)
       if (data) setSuratTypes(data)
     }
     fetch()
   }, [])
 
-  if (!isLoggedIn) return <Navigate to="/login" />
-  if (!isVerified) return <Navigate to="/layanan" />
+  if (!isLoggedIn) return <Navigate to={`/${villageSlug}/login`} />
+  if (!isVerified) return <Navigate to={`/${villageSlug}/layanan`} />
 
   const defaultTypes = [
     { id: '1', name: 'Surat Keterangan Domisili' },
@@ -40,6 +42,7 @@ export default function FormulirSurat() {
       const { error } = await supabase.from('surat_submissions').insert({
         surat_type_id: selectedType,
         user_id: profile.id,
+        village_id: villageId,
         data: {
           nama: `${profile.first_name} ${profile.last_name}`,
           email: profile.email,
@@ -71,7 +74,7 @@ export default function FormulirSurat() {
             Permohonan surat Anda telah dikirim. Silakan pantau status di halaman Status Permohonan.
           </p>
           <div style={{ display: 'flex', gap: '0.75rem', justifyContent: 'center' }}>
-            <Link to="/layanan/status" className="btn btn-primary">Lihat Status</Link>
+            <Link to={`/${villageSlug}/layanan/status`} className="btn btn-primary">Lihat Status</Link>
             <button className="btn btn-outline" onClick={() => { setSuccess(false); setSelectedType(''); setFormData({ keperluan: '', keterangan: '' }) }}>
               Ajukan Lagi
             </button>

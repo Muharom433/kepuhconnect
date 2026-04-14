@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { supabase } from '../../lib/supabase'
+import { useVillage } from '../../contexts/VillageContext'
 import { FileText, CheckCircle, XCircle, Clock, Loader, Eye } from 'lucide-react'
 
 const STATUS_CONFIG = {
@@ -15,15 +16,16 @@ export default function Persuratan() {
   const [filter, setFilter] = useState('all')
   const [selectedSub, setSelectedSub] = useState(null)
   const [notes, setNotes] = useState('')
+  const { villageId } = useVillage()
 
   useEffect(() => {
-    fetchData()
-  }, [])
+    if (villageId) fetchData()
+  }, [villageId])
 
   async function fetchData() {
     const [subRes, typesRes] = await Promise.all([
-      supabase.from('surat_submissions').select('*').order('created_at', { ascending: false }),
-      supabase.from('surat_types').select('*'),
+      supabase.from('surat_submissions').select('*').eq('village_id', villageId).order('created_at', { ascending: false }),
+      supabase.from('surat_types').select('*').eq('village_id', villageId),
     ])
     if (subRes.data) setSubmissions(subRes.data)
     if (typesRes.data) {

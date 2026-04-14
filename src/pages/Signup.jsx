@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
+import { useVillage } from '../contexts/VillageContext'
 import { UserPlus, AlertCircle, CheckCircle } from 'lucide-react'
 
 const COUNTRY_CODES = [
@@ -117,6 +118,7 @@ export default function Signup() {
   const [registeredEmail, setRegisteredEmail] = useState('')
   const [loading, setLoading] = useState(false)
   const { signUp } = useAuth()
+  const { villageId, villageSlug, villageName } = useVillage()
 
   const validate = () => {
     const errs = {}
@@ -153,6 +155,7 @@ export default function Signup() {
         whatsapp: form.whatsapp,
         countryCode: form.countryCode,
         address: form.address,
+        villageId: villageId,
       })
       // Berhasil: simpan email, tampilkan modal, reset form
       setRegisteredEmail(form.email)
@@ -185,9 +188,9 @@ export default function Signup() {
       <div className="page-enter" style={{ minHeight: '80vh', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '3rem 1rem', background: 'var(--bg-alt)' }}>
         <div style={{ maxWidth: 520, width: '100%' }}>
           <div className="text-center" style={{ marginBottom: '2rem' }}>
-            <div className="navbar-logo" style={{ width: 56, height: 56, fontSize: '1.2rem', margin: '0 auto 1rem' }}>KC</div>
+            <div className="navbar-logo" style={{ width: 56, height: 56, fontSize: '1.2rem', margin: '0 auto 1rem', background: 'linear-gradient(135deg, #1a6b3c, #2d9254)' }}>ND</div>
             <h2>Daftar Akun Baru</h2>
-            <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem' }}>Buat akun untuk mengakses layanan Padukuhan Kepuh</p>
+            <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem' }}>Buat akun untuk mengakses layanan {villageName || 'desa'}</p>
           </div>
 
           <div className="card-flat" style={{ padding: '2rem' }}>
@@ -259,7 +262,7 @@ export default function Signup() {
             </form>
 
             <p style={{ textAlign: 'center', marginTop: '1.5rem', fontSize: '0.875rem', color: 'var(--text-secondary)' }}>
-              Sudah punya akun? <Link to="/login" style={{ color: 'var(--primary)', fontWeight: 600 }}>Masuk</Link>
+              Sudah punya akun? <Link to={`/${villageSlug}/login`} style={{ color: 'var(--primary)', fontWeight: 600 }}>Masuk</Link>
             </p>
           </div>
         </div>

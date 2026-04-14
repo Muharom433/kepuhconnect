@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
 import { Link } from 'react-router-dom'
 import { supabase } from '../lib/supabase'
+import { useVillage } from '../contexts/VillageContext'
 import {
   Users, MapPin, Home as HomeIcon, Building2,
   ArrowRight, Newspaper, Store, FileText,
@@ -43,20 +44,21 @@ export default function Home() {
   const [news, setNews] = useState([])
   const [umkm, setUmkm] = useState([])
   const [villageInfo, setVillageInfo] = useState({})
+  const { villageId, villageSlug, villageName } = useVillage()
   const statsRef = useRef()
 
   useEffect(() => {
-    fetchData()
-  }, [])
+    if (villageId) fetchData()
+  }, [villageId])
 
   async function fetchData() {
     try {
       const [newsRes, umkmRes, infoRes, structRes, statRes] = await Promise.all([
-        supabase.from('news').select('*').eq('is_published', true).order('published_at', { ascending: false }).limit(3),
-        supabase.from('umkm_products').select('*').eq('is_active', true).limit(6),
-        supabase.from('village_info').select('*'),
-        supabase.from('village_structure').select('*, profiles(first_name, last_name, avatar_url)'),
-        supabase.from('statistik_kependudukan').select('*').single()
+        supabase.from('news').select('*').eq('is_published', true).eq('village_id', villageId).order('published_at', { ascending: false }).limit(3),
+        supabase.from('umkm_products').select('*').eq('is_active', true).eq('village_id', villageId).limit(6),
+        supabase.from('village_info').select('*').eq('village_id', villageId),
+        supabase.from('village_structure').select('*, profiles(first_name, last_name, avatar_url)').eq('village_id', villageId),
+        supabase.from('statistik_kependudukan').select('*').eq('village_id', villageId).single()
       ])
       if (newsRes.data) setNews(newsRes.data)
       if (umkmRes.data) setUmkm(umkmRes.data)
@@ -108,21 +110,21 @@ export default function Home() {
       icon: FileText,
       title: 'Layanan Persuratan Digital',
       desc: 'Ajukan surat-surat administrasi secara online tanpa perlu datang ke kantor padukuhan.',
-      link: '/layanan/surat',
+      link: `/${villageSlug}/layanan/surat`,
       color: '#5B7553'
     },
     {
       icon: Store,
       title: 'Katalog UMKM',
       desc: 'Temukan produk-produk unggulan dari UMKM Padukuhan Kepuh dalam satu platform.',
-      link: '/ekonomi',
+      link: `/${villageSlug}/ekonomi`,
       color: '#C9B99A'
     },
     {
       icon: Newspaper,
       title: 'Berita & Informasi',
       desc: 'Dapatkan berita terkini dan informasi penting seputar Padukuhan Kepuh.',
-      link: '/berita',
+      link: `/${villageSlug}/berita`,
       color: '#5B8FA8'
     },
   ]
@@ -153,11 +155,11 @@ export default function Home() {
               {villageInfo.hero_subtitle || 'Transformasi Digital Padukuhan Kepuh, Desa Pacarejo, Kapanewon Semanu, Gunung Kidul'}
             </p>
             <div className="hero-actions">
-              <Link to="/layanan" className="btn btn-primary btn-lg">
+              <Link to={`/${villageSlug}/layanan`} className="btn btn-primary btn-lg">
                 Akses Layanan
                 <ArrowRight size={18} />
               </Link>
-              <Link to="/profil" className="btn btn-outline btn-lg">
+              <Link to={`/${villageSlug}/profil`} className="btn btn-outline btn-lg">
                 Profil Desa
               </Link>
             </div>
@@ -205,7 +207,7 @@ export default function Home() {
               <p className="sambutan-content">
                 {villageInfo.sambutan_dukuh || 'Selamat datang di Website Padukuhan Kepuh, Desa Pacarejo, Kapanewon Semanu, Kabupaten Gunung Kidul. Kami berkomitmen untuk memberikan pelayanan terbaik kepada seluruh masyarakat melalui transformasi digital. Semoga website ini dapat memudahkan akses informasi dan layanan bagi seluruh warga.'}
               </p>
-              <Link to="/profil" className="btn btn-outline" style={{ marginTop: '1.5rem' }}>
+              <Link to={`/${villageSlug}/profil`} className="btn btn-outline" style={{ marginTop: '1.5rem' }}>
                 Selengkapnya tentang kami
                 <ChevronRight size={16} />
               </Link>
@@ -275,7 +277,7 @@ export default function Home() {
               <span className="section-label">Informasi Terkini</span>
               <h2 className="section-title">Berita Desa</h2>
             </div>
-            <Link to="/berita" className="btn btn-outline hide-mobile">
+            <Link to={`/${villageSlug}/berita`} className="btn btn-outline hide-mobile">
               Lihat Semua <ArrowRight size={16} />
             </Link>
           </div>
@@ -285,7 +287,7 @@ export default function Home() {
               { id: 2, title: 'Pelatihan UMKM Digital untuk Warga', excerpt: 'Pelatihan UMKM digital diadakan untuk meningkatkan kemampuan pemasaran online.', category: 'kegiatan', published_at: new Date().toISOString(), slug: '#' },
               { id: 3, title: 'Gotong Royong Pembersihan Sungai', excerpt: 'Ratusan warga berpartisipasi dalam gotong royong pembersihan sungai desa.', category: 'kegiatan', published_at: new Date().toISOString(), slug: '#' },
             ]).map((item) => (
-              <Link to={`/berita/${item.slug}`} key={item.id} className="card">
+              <Link to={`/${villageSlug}/berita/${item.slug}`} key={item.id} className="card">
                 <div className="card-img" style={{ 
                   backgroundImage: `url(https://images.unsplash.com/photo-1546422904-90eab23c3d7e?q=80&w=600&auto=format&fit=crop)`, 
                   backgroundSize: 'cover', 
@@ -323,7 +325,7 @@ export default function Home() {
               <span className="section-label">Ekonomi Desa</span>
               <h2 className="section-title">Produk UMKM Unggulan</h2>
             </div>
-            <Link to="/ekonomi" className="btn btn-outline hide-mobile">
+            <Link to={`/${villageSlug}/ekonomi`} className="btn btn-outline hide-mobile">
               Lihat Semua <ArrowRight size={16} />
             </Link>
           </div>
@@ -365,10 +367,10 @@ export default function Home() {
             Daftarkan diri Anda untuk mengakses layanan persuratan dan fitur lainnya di Padukuhan Kepuh
           </p>
           <div className="flex-center gap-md">
-            <Link to="/signup" className="btn btn-lg" style={{ background: 'white', color: 'var(--primary)' }}>
+            <Link to={`/${villageSlug}/signup`} className="btn btn-lg" style={{ background: 'white', color: 'var(--primary)' }}>
               Daftar Sekarang
             </Link>
-            <Link to="/kontak" className="btn btn-lg btn-outline" style={{ borderColor: 'rgba(255,255,255,0.4)', color: 'white' }}>
+            <Link to={`/${villageSlug}/kontak`} className="btn btn-lg btn-outline" style={{ borderColor: 'rgba(255,255,255,0.4)', color: 'white' }}>
               Hubungi Kami
             </Link>
           </div>

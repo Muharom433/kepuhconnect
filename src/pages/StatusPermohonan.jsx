@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { Navigate, Link } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
+import { useVillage } from '../contexts/VillageContext'
 import { supabase } from '../lib/supabase'
 import { ClipboardList, Clock, CheckCircle, XCircle, Loader } from 'lucide-react'
 
@@ -13,6 +14,7 @@ const STATUS_CONFIG = {
 
 export default function StatusPermohonan() {
   const { isLoggedIn, isVerified, profile } = useAuth()
+  const { villageId, villageSlug } = useVillage()
   const [submissions, setSubmissions] = useState([])
   const [suratTypes, setSuratTypes] = useState({})
 
@@ -33,8 +35,8 @@ export default function StatusPermohonan() {
     fetch()
   }, [profile])
 
-  if (!isLoggedIn) return <Navigate to="/login" />
-  if (!isVerified) return <Navigate to="/layanan" />
+  if (!isLoggedIn) return <Navigate to={`/${villageSlug}/login`} />
+  if (!isVerified) return <Navigate to={`/${villageSlug}/layanan`} />
 
   return (
     <div className="page-enter">
@@ -53,7 +55,7 @@ export default function StatusPermohonan() {
               <ClipboardList size={48} />
               <h3>Belum ada permohonan</h3>
               <p>Anda belum mengajukan permohonan surat</p>
-              <Link to="/layanan/surat" className="btn btn-primary" style={{ marginTop: '1rem' }}>Ajukan Surat</Link>
+              <Link to={`/${villageSlug}/layanan/surat`} className="btn btn-primary" style={{ marginTop: '1rem' }}>Ajukan Surat</Link>
             </div>
           ) : (
             <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>

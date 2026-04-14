@@ -1,10 +1,12 @@
 import { useState, useEffect } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import { supabase } from '../lib/supabase'
+import { useVillage } from '../contexts/VillageContext'
 import { ArrowLeft, Calendar, User, Tag } from 'lucide-react'
 
 export default function BeritaDetail() {
   const { slug } = useParams()
+  const { villageSlug } = useVillage()
   const [article, setArticle] = useState(null)
 
   useEffect(() => {
@@ -24,7 +26,7 @@ export default function BeritaDetail() {
       <div className="page-enter">
         <section style={{ padding: '5rem 0' }}>
           <div className="container" style={{ maxWidth: 800, margin: '0 auto' }}>
-            <Link to="/berita" className="btn btn-ghost" style={{ marginBottom: '2rem' }}>
+            <Link to={`/${villageSlug}/berita`} className="btn btn-ghost" style={{ marginBottom: '2rem' }}>
               <ArrowLeft size={16} /> Kembali ke Berita
             </Link>
             <div className="empty-state">
@@ -41,7 +43,7 @@ export default function BeritaDetail() {
     <div className="page-enter">
       <section style={{ padding: '5rem 0 3rem' }}>
         <div className="container" style={{ maxWidth: 800, margin: '0 auto' }}>
-          <Link to="/berita" className="btn btn-ghost" style={{ marginBottom: '2rem' }}>
+          <Link to={`/${villageSlug}/berita`} className="btn btn-ghost" style={{ marginBottom: '2rem' }}>
             <ArrowLeft size={16} /> Kembali ke Berita
           </Link>
           <span className="badge badge-primary" style={{ marginBottom: '1rem', textTransform: 'capitalize' }}>

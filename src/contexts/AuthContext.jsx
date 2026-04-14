@@ -33,7 +33,7 @@ export function AuthProvider({ children }) {
     try {
       const { data, error } = await supabase
         .from('profiles')
-        .select('*')
+        .select('*, villages(id, name, slug, status)')
         .eq('id', userId)
         .single()
       if (error) throw error
@@ -45,7 +45,7 @@ export function AuthProvider({ children }) {
     }
   }
 
-  async function signUp({ email, password, firstName, lastName, whatsapp, countryCode, address }) {
+  async function signUp({ email, password, firstName, lastName, whatsapp, countryCode, address, villageId }) {
     // Daftar tanpa kirim email konfirmasi — verifikasi dilakukan oleh admin
     const { data, error } = await supabase.auth.signUp({
       email,
@@ -67,8 +67,9 @@ export function AuthProvider({ children }) {
         whatsapp,
         country_code: countryCode,
         address,
-        role: 'pengguna',   // tidak bisa diubah dari form
-        is_verified: false, // admin yang verifikasi
+        role: 'pengguna',     // tidak bisa diubah dari form
+        is_verified: false,   // admin yang verifikasi
+        village_id: villageId || null, // Desa tempat user mendaftar
       })
       if (profileError) throw profileError
     }
@@ -101,7 +102,12 @@ export function AuthProvider({ children }) {
       throw new Error('Gagal memuat profil. Coba lagi nanti.')
     }
 
-    // 3. Blokir login jika belum diverifikasi admin
+    // 3. Super admin & admin bypass verifikasi
+    if (profileData.role === 'super_admin' || profileData.role === 'admin') {
+      return data
+    }
+
+    // 4. Blokir login jika belum diverifikasi admin
     if (!profileData.is_verified) {
       await supabase.auth.signOut() // paksa logout dari Supabase
       throw new Error(
@@ -126,9 +132,13 @@ export function AuthProvider({ children }) {
     signUp,
     signIn,
     signOut,
+    isSuperAdmin: profile?.role === 'super_admin',
     isAdmin: profile?.role === 'admin',
     isVerified: profile?.is_verified === true,
     isLoggedIn: !!user,
+    // Helper: mendapatkan slug desa user
+    userVillageSlug: profile?.villages?.slug || null,
+    userVillageId: profile?.village_id || null,
   }
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>

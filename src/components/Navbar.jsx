@@ -1,35 +1,39 @@
 import { useState } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
+import { useVillage } from '../contexts/VillageContext'
 import { Menu, X, ChevronDown, LogOut, User, LayoutDashboard, Settings } from 'lucide-react'
 import './Navbar.css'
-
-const navLinks = [
-  { label: 'Beranda', path: '/' },
-  { label: 'Profil Desa', path: '/profil' },
-  { label: 'Berita', path: '/berita' },
-  {
-    label: 'Layanan',
-    path: '/layanan',
-    children: [
-      { label: 'Formulir Surat', path: '/layanan/surat' },
-      { label: 'Status Permohonan', path: '/layanan/status' },
-      { label: 'Info Persyaratan', path: '/layanan/persyaratan' },
-    ],
-  },
-  { label: 'Ekonomi', path: '/ekonomi' },
-  { label: 'Kontak', path: '/kontak' },
-]
 
 export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false)
   const [dropdownOpen, setDropdownOpen] = useState(null)
-  const { isLoggedIn, isAdmin, profile, signOut } = useAuth()
+  const { isLoggedIn, isAdmin, isSuperAdmin, profile, signOut } = useAuth()
+  const { villageSlug, villageName, village } = useVillage()
   const location = useLocation()
   const navigate = useNavigate()
 
+  const base = `/${villageSlug}`
+
+  const navLinks = [
+    { label: 'Beranda', path: base },
+    { label: 'Profil Desa', path: `${base}/profil` },
+    { label: 'Berita', path: `${base}/berita` },
+    {
+      label: 'Layanan',
+      path: `${base}/layanan`,
+      children: [
+        { label: 'Formulir Surat', path: `${base}/layanan/surat` },
+        { label: 'Status Permohonan', path: `${base}/layanan/status` },
+        { label: 'Info Persyaratan', path: `${base}/layanan/persyaratan` },
+      ],
+    },
+    { label: 'Ekonomi', path: `${base}/ekonomi` },
+    { label: 'Kontak', path: `${base}/kontak` },
+  ]
+
   const isActive = (path) => {
-    if (path === '/') return location.pathname === '/'
+    if (path === base) return location.pathname === base || location.pathname === `${base}/`
     return location.pathname.startsWith(path)
   }
 
@@ -38,14 +42,19 @@ export default function Navbar() {
     navigate('/')
   }
 
+  // Singkatan untuk logo
+  const logoText = villageName
+    ? villageName.split(' ').map(w => w[0]).join('').substring(0, 2).toUpperCase()
+    : 'ND'
+
   return (
     <nav className="navbar">
       <div className="navbar-inner container-lg">
-        <Link to="/" className="navbar-brand">
-          <div className="navbar-logo">KC</div>
+        <Link to={base} className="navbar-brand">
+          <div className="navbar-logo">{logoText}</div>
           <div className="navbar-brand-text">
-            <span className="navbar-brand-name">KepuhConnect</span>
-            <span className="navbar-brand-sub">Padukuhan Kepuh</span>
+            <span className="navbar-brand-name">{villageName || 'NusaDesa'}</span>
+            <span className="navbar-brand-sub">{village?.village_type || 'Desa Digital'}</span>
           </div>
         </Link>
 
@@ -94,9 +103,15 @@ export default function Navbar() {
             {isLoggedIn ? (
               <div className="navbar-user">
                 {isAdmin && (
-                  <Link to="/admin" className="btn btn-sm btn-outline" onClick={() => setMobileOpen(false)}>
+                  <Link to={`${base}/admin`} className="btn btn-sm btn-outline" onClick={() => setMobileOpen(false)}>
                     <LayoutDashboard size={14} />
                     Admin
+                  </Link>
+                )}
+                {isSuperAdmin && (
+                  <Link to="/superadmin" className="btn btn-sm btn-outline" onClick={() => setMobileOpen(false)}>
+                    <LayoutDashboard size={14} />
+                    Super Admin
                   </Link>
                 )}
               <div
@@ -113,7 +128,7 @@ export default function Navbar() {
                 </span>
                 {dropdownOpen === 'user' && (
                   <div className="navbar-dropdown" style={{ right: 0, left: 'auto', minWidth: 160 }}>
-                    <Link to="/profil/edit" className="navbar-dropdown-link"
+                    <Link to={`${base}/profil/edit`} className="navbar-dropdown-link"
                       onClick={() => { setMobileOpen(false); setDropdownOpen(null) }}
                       style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                       <Settings size={14} /> Edit Profil
@@ -130,10 +145,10 @@ export default function Navbar() {
               </div>
             ) : (
               <>
-                <Link to="/login" className="btn btn-sm btn-ghost" onClick={() => setMobileOpen(false)}>
+                <Link to={`${base}/login`} className="btn btn-sm btn-ghost" onClick={() => setMobileOpen(false)}>
                   Masuk
                 </Link>
-                <Link to="/signup" className="btn btn-sm btn-primary" onClick={() => setMobileOpen(false)}>
+                <Link to={`${base}/signup`} className="btn btn-sm btn-primary" onClick={() => setMobileOpen(false)}>
                   Daftar
                 </Link>
               </>
