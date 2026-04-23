@@ -5,7 +5,7 @@
   display: flex;
   align-items: center;
   overflow: hidden;
-  background: linear-gradient(135deg, var(--bg) 0%, var(--primary-bg) 100%);
+  background: linear-gradient(135deg, #0A2218 0%, #0F3326 40%, #123B2E 100%);
 }
 
 .hero-bg {
@@ -33,7 +33,7 @@
 .hero-shape-2 {
   width: 300px;
   height: 300px;
-  background: var(--accent);
+  background: var(--secondary);
   bottom: -50px;
   left: -50px;
   animation: float 6s ease-in-out infinite 1s;
@@ -42,7 +42,7 @@
 .hero-shape-3 {
   width: 200px;
   height: 200px;
-  background: var(--primary-light);
+  background: var(--accent);
   top: 40%;
   right: 30%;
   animation: float 10s ease-in-out infinite 2s;
@@ -63,26 +63,35 @@
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  background: rgba(255, 255, 255, 0.2);
-  backdrop-filter: blur(8px);
+  background: linear-gradient(135deg, rgba(239, 100, 44, 0.25), rgba(239, 100, 44, 0.15));
+  backdrop-filter: blur(12px);
   color: #fff;
-  padding: 0.5rem 1rem;
+  padding: 0.5rem 1.25rem;
   border-radius: var(--radius-full);
   font-size: 0.8rem;
   font-weight: 600;
   margin-bottom: 1.5rem;
-  border: 1px solid rgba(255, 255, 255, 0.3);
+  border: 1px solid rgba(239, 100, 44, 0.4);
+  box-shadow: 0 0 20px rgba(239, 100, 44, 0.15);
 }
 
 .hero-text h1 {
   margin-bottom: 1rem;
   color: #ffffff;
   font-size: calc(1.8rem + 1.5vw);
+  text-shadow: 0 2px 20px rgba(0, 0, 0, 0.3);
+}
+
+.hero-text h1 span {
+  background: linear-gradient(135deg, var(--primary-lighter), var(--secondary-lighter));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
 .hero-subtitle {
   font-size: 1.15rem;
-  color: rgba(255, 255, 255, 0.9);
+  color: rgba(255, 255, 255, 0.85);
   line-height: 1.7;
   max-width: 600px;
   margin-bottom: 2rem;
@@ -92,6 +101,15 @@
   display: flex;
   gap: 1rem;
   margin-bottom: 2.5rem;
+}
+
+.hero-actions .btn-outline {
+  border-color: rgba(255, 255, 255, 0.35);
+  color: #fff;
+}
+.hero-actions .btn-outline:hover {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.5);
 }
 
 .hero-highlights {
@@ -104,12 +122,16 @@
   align-items: center;
   gap: 0.5rem;
   font-size: 0.825rem;
-  color: #e0e0e0;
+  color: rgba(255, 255, 255, 0.7);
   font-weight: 500;
+  padding: 0.375rem 0.75rem;
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: var(--radius-full);
+  border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .hero-highlight svg {
-  color: #fff;
+  color: var(--accent);
 }
 
 /* Hero Cards Stack */
@@ -126,17 +148,19 @@
   align-items: center;
   gap: 1rem;
   padding: 1.25rem 1.5rem;
-  background: rgba(255, 255, 255, 0.8);
+  background: rgba(255, 255, 255, 0.08);
   backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.12);
   border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-md);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
   transition: var(--transition);
 }
 
 .hero-card:hover {
   transform: translateX(-8px);
-  box-shadow: var(--shadow-lg);
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(0, 132, 79, 0.3);
+  box-shadow: 0 8px 32px rgba(0, 132, 79, 0.15);
 }
 
 .hero-card-1 { animation: slideInRight 0.6s ease-out forwards; }
@@ -147,28 +171,41 @@
   width: 48px;
   height: 48px;
   border-radius: var(--radius-md);
-  background: var(--primary-bg);
-  color: var(--primary);
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
+  color: white;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
+  box-shadow: 0 4px 12px rgba(0, 132, 79, 0.3);
 }
 
 .hero-card strong {
   display: block;
   font-size: 0.9rem;
   margin-bottom: 0.125rem;
+  color: #fff;
 }
 
 .hero-card p {
   font-size: 0.75rem;
-  color: var(--text-muted);
+  color: rgba(255, 255, 255, 0.5);
 }
 
 /* ============================================ Sambutan ============================================ */
 .sambutan-section {
   background: var(--surface);
+  position: relative;
+}
+
+.sambutan-section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--accent-lighter), var(--primary-lighter), transparent);
 }
 
 .sambutan-grid {
@@ -183,9 +220,20 @@
   height: 320px;
   border-radius: var(--radius-xl);
   overflow: hidden;
-  background: linear-gradient(135deg, var(--primary-bg), var(--primary-lighter));
-  border: 3px solid var(--primary-lighter);
+  background: linear-gradient(135deg, var(--primary-bg), var(--secondary-bg));
+  border: 3px solid transparent;
+  background-clip: padding-box;
+  position: relative;
   margin-bottom: 1.25rem;
+}
+
+.sambutan-photo-frame::before {
+  content: '';
+  position: absolute;
+  inset: -3px;
+  border-radius: calc(var(--radius-xl) + 3px);
+  background: linear-gradient(135deg, var(--primary), var(--accent), var(--secondary));
+  z-index: -1;
 }
 
 .sambutan-photo-placeholder {
@@ -204,6 +252,7 @@
 .sambutan-nama h4 {
   font-size: 1.1rem;
   margin-bottom: 0.25rem;
+  color: var(--primary-dark);
 }
 
 .sambutan-nama p {
@@ -236,12 +285,31 @@
   transition: var(--transition);
   text-decoration: none;
   color: inherit;
+  position: relative;
+  overflow: hidden;
+}
+
+.feature-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--accent), var(--accent-light));
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: var(--transition);
 }
 
 .feature-card:hover {
   transform: translateY(-6px);
-  box-shadow: var(--shadow-lg);
-  border-color: var(--primary-lighter);
+  box-shadow: 0 8px 30px rgba(239, 100, 44, 0.08);
+  border-color: var(--accent-lighter);
+}
+
+.feature-card:hover::before {
+  transform: scaleX(1);
 }
 
 .feature-icon {
@@ -272,13 +340,47 @@
   gap: 0.375rem;
   font-size: 0.85rem;
   font-weight: 600;
-  color: var(--primary);
+  color: var(--accent);
+  transition: var(--transition);
+}
+
+.feature-link:hover {
+  gap: 0.625rem;
+  color: var(--accent-dark);
 }
 
 /* ============================================ CTA ============================================ */
 .cta-section {
   padding: 5rem 0;
-  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+  background: linear-gradient(135deg, var(--primary-dark), var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientShift 8s ease-in-out infinite;
+  position: relative;
+  overflow: hidden;
+}
+
+.cta-section::before {
+  content: '';
+  position: absolute;
+  top: -30%;
+  right: -10%;
+  width: 500px;
+  height: 500px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(239, 100, 44, 0.2), transparent 70%);
+  animation: float 10s ease-in-out infinite;
+}
+
+.cta-section::after {
+  content: '';
+  position: absolute;
+  bottom: -40%;
+  left: -15%;
+  width: 400px;
+  height: 400px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(239, 100, 44, 0.15), transparent 70%);
+  animation: float 8s ease-in-out infinite 2s;
 }
 
 /* ============================================ Responsive ============================================ */
@@ -300,6 +402,7 @@
   }
   .hero-highlights {
     justify-content: center;
+    flex-wrap: wrap;
   }
   .hero-card-stack {
     margin: 0 auto;
@@ -318,6 +421,7 @@
   .hero-highlights {
     flex-direction: column;
     gap: 0.75rem;
+    align-items: center;
   }
   .hero-actions {
     flex-direction: column;

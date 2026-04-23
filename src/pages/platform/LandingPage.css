@@ -1,0 +1,463 @@
+/* ============================================
+   LandingPage.css — NusaDesa Nusantara Theme
+   ============================================ */
+
+/* ─── HERO ──────────────────────────────────── */
+.lp-hero {
+  position: relative;
+  min-height: 92vh;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  background-color: #08201A; /* deep forest fallback */
+}
+
+/* Foto latar belakang — nuansa gabungan rumah adat Nusantara / Indonesia */
+.lp-hero-photo {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  /* Menggunakan gambar arsitektur tradisional Nusantara yang valid dan sudah teruji */
+  background-image: url('https://images.unsplash.com/photo-1555400038-63f5ba517a47?q=80&w=1920&auto=format&fit=crop');
+  background-size: cover;
+  background-position: center 40%;
+  background-repeat: no-repeat;
+}
+
+/* ─── STRIP AKSARA NUSANTARA ─────────────────── */
+.lp-script-strip {
+  display: flex;
+  align-items: center;
+  gap: 1.75rem;
+  margin-top: 2.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  flex-wrap: wrap;
+}
+
+.lp-script-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+  cursor: default;
+}
+
+.lp-script-char {
+  font-size: 1.6rem;
+  line-height: 1.2;
+  color: rgba(255, 255, 255, 0.35);
+  transition: color 0.3s ease;
+}
+
+.lp-script-item:hover .lp-script-char {
+  color: var(--accent);
+  opacity: 0.75;
+}
+
+.lp-script-label {
+  font-size: 0.56rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.2);
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.lp-script-strip-label {
+  font-size: 0.6rem;
+  color: rgba(255, 255, 255, 0.18);
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  flex-shrink: 0;
+  padding-right: 0.25rem;
+  border-right: 1px solid rgba(255,255,255,0.1);
+}
+
+
+/* Overlay gelap untuk keterbacaan teks */
+.lp-hero-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background:
+    linear-gradient(
+      135deg,
+      rgba(6, 22, 14, 0.91) 0%,
+      rgba(8, 28, 20, 0.86) 40%,
+      rgba(10, 38, 32, 0.80) 70%,
+      rgba(8, 42, 36, 0.85) 100%
+    );
+}
+
+/* Aksen batik di atas overlay */
+.lp-hero-batik {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80'%3E%3Ccircle cx='40' cy='40' r='30' fill='none' stroke='rgba(255,255,255,0.025)' stroke-width='1'/%3E%3Ccircle cx='40' cy='40' r='20' fill='none' stroke='rgba(255,255,255,0.018)' stroke-width='1'/%3E%3Ccircle cx='40' cy='40' r='10' fill='none' stroke='rgba(255,255,255,0.012)' stroke-width='1'/%3E%3Ccircle cx='0' cy='0' r='20' fill='none' stroke='rgba(255,255,255,0.018)' stroke-width='1'/%3E%3Ccircle cx='80' cy='80' r='20' fill='none' stroke='rgba(255,255,255,0.018)' stroke-width='1'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  pointer-events: none;
+}
+
+.lp-hero-inner {
+  position: relative;
+  z-index: 3;
+  padding-top: 3rem;
+  padding-bottom: 3rem;
+}
+
+.lp-hero-content {
+  max-width: 660px;
+}
+
+/* Eyebrow / label atas */
+.lp-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: 1.25rem;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.1);
+  padding: 0.35rem 0.875rem;
+  border-radius: 999px;
+}
+
+.lp-eyebrow svg {
+  color: var(--accent);
+  opacity: 0.8;
+}
+
+/* Judul utama */
+.lp-hero-title {
+  font-size: clamp(3.5rem, 8vw, 6.5rem);
+  font-weight: 800;
+  color: #ffffff;
+  line-height: 1;
+  margin-bottom: 0.75rem;
+  letter-spacing: -0.03em;
+  text-shadow: 0 2px 20px rgba(0,0,0,0.4);
+}
+
+/* Tagline — muted, tidak kontras */
+.lp-hero-tagline {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.4);
+  letter-spacing: 0.12em;
+  margin-bottom: 1.25rem;
+  text-transform: uppercase;
+}
+
+/* Garis pemisah ornamen — aksen emas */
+.lp-hero-divider {
+  width: 48px;
+  height: 2px;
+  background: var(--accent);
+  border-radius: 2px;
+  margin-bottom: 1.5rem;
+  opacity: 0.7;
+}
+
+/* Deskripsi */
+.lp-hero-desc {
+  font-size: 1.05rem;
+  color: rgba(255, 255, 255, 0.7);
+  line-height: 1.85;
+  margin-bottom: 2.25rem;
+  max-width: 540px;
+}
+
+/* Tombol */
+.lp-hero-actions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 2.25rem;
+  flex-wrap: wrap;
+}
+
+.lp-btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.9rem 1.875rem;
+  background: var(--primary);
+  color: #fff;
+  border-radius: var(--radius-md);
+  font-weight: 600;
+  font-size: 0.925rem;
+  transition: var(--transition);
+  border: 2px solid transparent;
+  box-shadow: 0 4px 20px rgba(0, 132, 79, 0.3);
+  text-decoration: none;
+}
+
+.lp-btn-primary:hover {
+  background: var(--primary-light);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0, 132, 79, 0.35);
+}
+
+.lp-btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.875rem 1.5rem;
+  background: rgba(255,255,255,0.08);
+  color: rgba(255, 255, 255, 0.75);
+  border-radius: var(--radius-md);
+  font-weight: 500;
+  font-size: 0.875rem;
+  transition: var(--transition);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  text-decoration: none;
+  backdrop-filter: blur(4px);
+}
+
+.lp-btn-ghost:hover {
+  background: rgba(255, 255, 255, 0.14);
+  color: white;
+  border-color: rgba(255, 255, 255, 0.35);
+}
+
+/* Trust pills */
+.lp-trust-row {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.lp-trust-item {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  font-size: 0.78rem;
+  color: rgba(255, 255, 255, 0.45);
+  font-weight: 500;
+}
+
+.lp-trust-item svg {
+  color: var(--accent);
+  opacity: 0.6;
+  flex-shrink: 0;
+}
+
+/* ─── CTA SECTION ────────────────────────────── */
+.lp-cta-section {
+  position: relative;
+  padding: 5rem 0;
+  background: linear-gradient(135deg, #062214 0%, #083020 40%, #073A30 70%, #062A2A 100%);
+  overflow: hidden;
+}
+
+.lp-cta-section::before {
+  content: '';
+  position: absolute;
+  top: -40%;
+  right: -5%;
+  width: 500px;
+  height: 500px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(0, 132, 79, 0.2), transparent 65%);
+  pointer-events: none;
+}
+
+.lp-cta-section::after {
+  content: '';
+  position: absolute;
+  bottom: -40%;
+  left: -8%;
+  width: 400px;
+  height: 400px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(0, 128, 134, 0.15), transparent 65%);
+  pointer-events: none;
+}
+
+/* ─── ABOUT SECTION ──────────────────────────── */
+.lp-about-section {
+  background: var(--surface);
+}
+
+.lp-about-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4rem;
+  align-items: start;
+}
+
+.lp-code {
+  background: var(--bg-alt);
+  color: var(--primary);
+  padding: 0.1rem 0.45rem;
+  border-radius: 4px;
+  font-size: 0.875em;
+  font-family: 'Courier New', monospace;
+  border: 1px solid var(--border);
+  margin: 0 0.15rem;
+}
+
+.lp-about-badges {
+  display: flex;
+  gap: 0.625rem;
+  flex-wrap: wrap;
+  margin-top: 1.5rem;
+}
+
+.lp-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.3rem 0.875rem;
+  border-radius: var(--radius-full);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+}
+
+.lp-badge-green { background: var(--primary-bg); color: var(--primary); border: 1px solid rgba(0,132,79,0.15); }
+.lp-badge-teal  { background: var(--secondary-bg); color: var(--secondary); border: 1px solid rgba(0,128,134,0.15); }
+.lp-badge-gold  { background: var(--accent-bg); color: var(--accent-dark); border: 1px solid rgba(239,100,44,0.15); }
+
+/* Kartu manfaat */
+.lp-about-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.lp-use-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  padding: 1.125rem 1.25rem;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-light);
+  background: var(--bg);
+  transition: var(--transition);
+}
+
+.lp-use-card:hover {
+  border-color: rgba(0,132,79,0.2);
+  box-shadow: 0 4px 16px rgba(0,132,79,0.06);
+  transform: translateY(-1px);
+}
+
+.lp-use-icon {
+  width: 38px;
+  height: 38px;
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.lp-use-card strong {
+  display: block;
+  font-size: 0.9rem;
+  color: var(--text);
+  margin-bottom: 0.2rem;
+}
+
+.lp-use-card p {
+  font-size: 0.815rem;
+  color: var(--text-secondary);
+  line-height: 1.65;
+  margin: 0;
+}
+
+/* ─── STATS ──────────────────────────────────── */
+.lp-stats-section {
+  background: var(--bg);
+}
+
+/* ─── WHY SECTION ────────────────────────────── */
+.lp-why-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 5rem;
+  align-items: start;
+}
+
+.lp-why-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.875rem;
+  margin-bottom: 1rem;
+}
+
+.lp-why-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--accent);
+  flex-shrink: 0;
+  margin-top: 0.55rem;
+}
+
+.lp-why-item p {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  line-height: 1.7;
+  margin: 0;
+}
+
+/* ─── STEP CARDS ─────────────────────────────── */
+.lp-step-card {
+  padding: 2.25rem 2rem;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border-light);
+  background: var(--surface);
+  transition: var(--transition);
+  position: relative;
+}
+
+.lp-step-card:hover {
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.06);
+  transform: translateY(-4px);
+}
+
+.lp-step-num {
+  font-size: 2.5rem;
+  font-weight: 800;
+  line-height: 1;
+  margin-bottom: 0.75rem;
+  opacity: 0.15;
+  border-left: 3px solid;
+  padding-left: 0.5rem;
+  font-family: 'Lora', serif;
+}
+
+.lp-step-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius-md);
+  background: var(--bg-alt);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1rem;
+}
+
+/* ─── RESPONSIVE ─────────────────────────────── */
+@media (max-width: 1024px) {
+  .lp-about-grid { grid-template-columns: 1fr; gap: 2.5rem; }
+  .lp-why-grid   { grid-template-columns: 1fr; gap: 2rem; }
+}
+
+@media (max-width: 768px) {
+  .lp-hero { min-height: auto; padding: 5rem 0 3rem; }
+  .lp-hero-title { font-size: 3rem; }
+  .lp-hero-actions { flex-direction: column; align-items: stretch; }
+  .lp-btn-primary, .lp-btn-ghost { justify-content: center; text-align: center; }
+  .lp-trust-row { gap: 1rem; }
+}

@@ -9,6 +9,7 @@ import SuperAdminLayout from './components/SuperAdminLayout'
 
 // Platform pages
 import LandingPage from './pages/platform/LandingPage'
+import AboutPage from './pages/platform/AboutPage'
 import TermsConditions from './pages/platform/TermsConditions'
 import RegisterVillage from './pages/platform/RegisterVillage'
 
@@ -60,7 +61,7 @@ export default function App() {
       {/* ══════ Platform Pages (NusaDesa root) ══════ */}
       <Route element={<PlatformLayout />}>
         <Route path="/" element={<LandingPage />} />
-        <Route path="/tentang" element={<LandingPage />} />
+        <Route path="/tentang" element={<AboutPage />} />
         <Route path="/syarat-ketentuan" element={<TermsConditions />} />
         <Route path="/daftar-desa" element={<RegisterVillage />} />
         <Route path="/login" element={<Login />} />

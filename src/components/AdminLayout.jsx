@@ -51,7 +51,7 @@ function AdminLayoutInner() {
       <aside className={`admin-sidebar ${collapsed ? 'collapsed' : ''}`}>
         <div className="admin-sidebar-header">
           <Link to={`/${villageSlug}`} className="admin-logo">
-            <div className="navbar-logo">{logoText}</div>
+            <img src="/img/logo nusadesa.png" alt="Logo" style={{ height: 36, objectFit: 'contain', borderRadius: '6px' }} />
             {!collapsed && (
               <div>
                 <div style={{ fontWeight: 700, fontSize: '0.95rem', color: 'white' }}>{villageName || 'NusaDesa'}</div>

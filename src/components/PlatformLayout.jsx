@@ -28,10 +28,10 @@ export default function PlatformLayout() {
       <nav className="navbar">
         <div className="navbar-inner container-lg">
           <Link to="/" className="navbar-brand">
-            <div className="navbar-logo" style={{ background: 'linear-gradient(135deg, #1a6b3c, #2d9254)' }}>ND</div>
+              <img src="/img/logo nusadesa.png" alt="Logo NusaDesa" style={{ height: 44, objectFit: 'contain', borderRadius: '8px' }} />
             <div className="navbar-brand-text">
               <span className="navbar-brand-name">NusaDesa</span>
-              <span className="navbar-brand-sub">Platform Desa Digital</span>
+              <span className="navbar-brand-sub">Konektivitas Desa Nusantara</span>
             </div>
           </Link>
 
@@ -85,7 +85,7 @@ export default function PlatformLayout() {
       <footer className="footer">
         <div className="container-lg">
           <div className="footer-bottom" style={{ borderTop: 'none', paddingTop: '2rem' }}>
-            <p>&copy; {new Date().getFullYear()} NusaDesa — Platform Desa Digital Indonesia. All rights reserved.</p>
+            <p>&copy; {new Date().getFullYear()} NusaDesa — Konektivitas Desa Nusantara Terintegrasi. All rights reserved.</p>
             <p className="footer-credit">Dibuat dengan ❤️ untuk kemajuan desa di seluruh Indonesia</p>
           </div>
         </div>

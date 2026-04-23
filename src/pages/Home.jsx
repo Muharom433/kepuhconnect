@@ -111,21 +111,21 @@ export default function Home() {
       title: 'Layanan Persuratan Digital',
       desc: 'Ajukan surat-surat administrasi secara online tanpa perlu datang ke kantor padukuhan.',
       link: `/${villageSlug}/layanan/surat`,
-      color: '#5B7553'
+      color: '#00844F'
     },
     {
       icon: Store,
       title: 'Katalog UMKM',
       desc: 'Temukan produk-produk unggulan dari UMKM Padukuhan Kepuh dalam satu platform.',
       link: `/${villageSlug}/ekonomi`,
-      color: '#C9B99A'
+      color: '#EF642C'
     },
     {
       icon: Newspaper,
       title: 'Berita & Informasi',
       desc: 'Dapatkan berita terkini dan informasi penting seputar Padukuhan Kepuh.',
       link: `/${villageSlug}/berita`,
-      color: '#5B8FA8'
+      color: '#008086'
     },
   ]
 
@@ -134,7 +134,7 @@ export default function Home() {
       {/* Hero Section */}
       <section className="hero">
         <div className="hero-bg" style={{ 
-          backgroundImage: `linear-gradient(rgba(17, 34, 25, 0.75), rgba(17, 34, 25, 0.85)), url('${villageInfo.hero_image || 'https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?q=80&w=1920&auto=format&fit=crop'}')`, 
+          backgroundImage: `linear-gradient(135deg, rgba(10, 34, 24, 0.85), rgba(0, 132, 79, 0.65), rgba(0, 128, 134, 0.6)), url('${villageInfo.hero_image || 'https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?q=80&w=1920&auto=format&fit=crop'}')`, 
           backgroundSize: 'cover', 
           backgroundPosition: 'center',
           position: 'absolute',

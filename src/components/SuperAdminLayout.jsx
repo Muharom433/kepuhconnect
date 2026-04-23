@@ -35,9 +35,7 @@ export default function SuperAdminLayout() {
       <aside className={`admin-sidebar ${collapsed ? 'collapsed' : ''}`}>
         <div className="admin-sidebar-header">
           <Link to="/" className="admin-logo">
-            <div className="navbar-logo" style={{ background: 'linear-gradient(135deg, #7c3aed, #5b21b6)' }}>
-              <Shield size={16} />
-            </div>
+            <img src="/img/logo nusadesa.png" alt="Logo" style={{ height: 36, objectFit: 'contain', borderRadius: '6px' }} />
             {!collapsed && (
               <div>
                 <div style={{ fontWeight: 700, fontSize: '0.95rem', color: 'white' }}>NusaDesa</div>

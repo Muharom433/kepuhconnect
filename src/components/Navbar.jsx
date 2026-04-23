@@ -51,10 +51,10 @@ export default function Navbar() {
     <nav className="navbar">
       <div className="navbar-inner container-lg">
         <Link to={base} className="navbar-brand">
-          <div className="navbar-logo">{logoText}</div>
+          <img src="/img/logo nusadesa.png" alt="Logo NusaDesa" style={{ height: 44, objectFit: 'contain', borderRadius: '8px' }} />
           <div className="navbar-brand-text">
             <span className="navbar-brand-name">{villageName || 'NusaDesa'}</span>
-            <span className="navbar-brand-sub">{village?.village_type || 'Desa Digital'}</span>
+            <span className="navbar-brand-sub">{village?.village_type || 'Konektivitas Desa Nusantara'}</span>
           </div>
         </Link>
 

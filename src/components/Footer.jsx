@@ -18,10 +18,10 @@ export default function Footer() {
         <div className="footer-grid">
           <div className="footer-brand">
             <div className="flex gap-sm" style={{ marginBottom: '1rem' }}>
-              <div className="navbar-logo" style={{ width: 44, height: 44 }}>{logoText}</div>
+              <img src="/img/logo nusadesa.png" alt="Logo NusaDesa" style={{ height: 48, objectFit: 'contain', borderRadius: '8px' }} />
               <div>
                 <h3 style={{ fontSize: '1.25rem' }}>{villageName || 'NusaDesa'}</h3>
-                <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>{village?.village_type || 'Platform Desa Digital'}</p>
+                <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>{village?.village_type || 'Konektivitas Desa Nusantara'}</p>
               </div>
             </div>
             <p className="footer-desc">
@@ -64,7 +64,7 @@ export default function Footer() {
         </div>
 
         <div className="footer-bottom">
-          <p>&copy; {new Date().getFullYear()} NusaDesa — {villageName || 'Platform Desa Digital Indonesia'}. All rights reserved.</p>
+          <p>&copy; {new Date().getFullYear()} NusaDesa — {villageName || 'Konektivitas Desa Nusantara Terintegrasi'}. All rights reserved.</p>
           <p className="footer-credit">
             Dibuat dengan ❤️ untuk kemajuan desa
           </p>
