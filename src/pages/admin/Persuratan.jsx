@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { supabase } from '../../lib/supabase'
 import { useVillage } from '../../contexts/VillageContext'
-import { FileText, CheckCircle, XCircle, Clock, Loader, Eye } from 'lucide-react'
+import { FileText, CheckCircle, XCircle, Clock, Loader, Eye, Filter } from 'lucide-react'
 
 const STATUS_CONFIG = {
   pending: { label: 'Menunggu', badge: 'badge-warning', icon: Clock },
@@ -44,17 +44,45 @@ export default function Persuratan() {
 
   return (
     <div className="page-enter">
-      <div style={{ marginBottom: '2rem' }}>
-        <h1 style={{ fontSize: 'var(--font-size-3xl)', marginBottom: '0.5rem' }}>Kelola Persuratan</h1>
-        <p style={{ color: 'var(--text-secondary)' }}>Kelola permohonan surat dari warga</p>
+      <div className="admin-page-header">
+        <div>
+          <span className="admin-section-badge" style={{ marginBottom: '0.625rem', display: 'inline-flex' }}>
+            <FileText size={10} /> Administrasi
+          </span>
+          <h1 style={{ fontSize: 'var(--font-size-3xl)', marginBottom: '0.25rem', lineHeight: 1.2 }}>Kelola Persuratan</h1>
+          <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem' }}>Kelola permohonan surat dari warga desa</p>
+        </div>
+        <div style={{
+          display: 'flex', alignItems: 'center', gap: '0.5rem',
+          fontSize: '0.78rem', fontWeight: 600, color: '#EF642C',
+          background: 'rgba(239,100,44,0.08)', border: '1px solid rgba(239,100,44,0.2)',
+          borderRadius: '999px', padding: '0.4rem 1rem'
+        }}>
+          {submissions.filter(s => s.status === 'pending').length} menunggu
+        </div>
       </div>
 
-      {/* Filters */}
-      <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '1.5rem', flexWrap: 'wrap' }}>
+      {/* Filter Tabs */}
+      <div style={{
+        display: 'flex', gap: '0.375rem', marginBottom: '1.5rem', flexWrap: 'wrap',
+        padding: '0.5rem', background: 'var(--bg-alt)',
+        borderRadius: 'var(--radius-md)', border: '1px solid var(--border-light)'
+      }}>
         {['all', 'pending', 'processing', 'approved', 'rejected'].map(f => (
-          <button key={f} className={`btn btn-sm ${filter === f ? 'btn-primary' : 'btn-ghost'}`} onClick={() => setFilter(f)} style={{ textTransform: 'capitalize' }}>
+          <button key={f}
+            onClick={() => setFilter(f)}
+            style={{
+              padding: '0.4rem 0.875rem', borderRadius: 'var(--radius-sm)',
+              fontSize: '0.8rem', fontWeight: 600, border: 'none', cursor: 'pointer',
+              transition: 'var(--transition)',
+              background: filter === f ? 'var(--surface)' : 'transparent',
+              color: filter === f ? 'var(--primary)' : 'var(--text-muted)',
+              boxShadow: filter === f ? '0 1px 4px rgba(0,132,79,0.1)' : 'none',
+              borderBottom: filter === f ? '2px solid #EF642C' : '2px solid transparent'
+            }}
+          >
             {f === 'all' ? 'Semua' : STATUS_CONFIG[f]?.label}
-            {f !== 'all' && <span style={{ marginLeft: 4 }}>({submissions.filter(s => s.status === f).length})</span>}
+            <span style={{ marginLeft: 4, opacity: 0.7 }}>({f === 'all' ? submissions.length : submissions.filter(s => s.status === f).length})</span>
           </button>
         ))}
       </div>

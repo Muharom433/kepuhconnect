@@ -197,6 +197,12 @@
 }
 
 @media (max-width: 1024px) {
+  .navbar {
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    background: var(--surface);
+  }
+
   .navbar-toggle {
     display: flex;
   }
@@ -207,18 +213,19 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background: var(--bg);
+    background: var(--surface);
     flex-direction: column;
     align-items: stretch;
     padding: 1.5rem;
     gap: 1rem;
-    transform: translateX(100%);
-    transition: var(--transition);
     overflow-y: auto;
+    z-index: 99;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    display: none;
   }
 
   .navbar-menu.open {
-    transform: translateX(0);
+    display: flex;
   }
 
   .navbar-links {

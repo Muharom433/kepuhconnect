@@ -128,37 +128,78 @@ export default function LandingPage() {
     return { bg: 'rgba(239, 100, 44, 0.1)', color: 'var(--accent-dark)' }
   }
 
-  // Pemetaan foto unik per provinsi (karena mencari 38 URL valid rumah adat sangat rentan broken/404, kita menggunakan static Unsplash mixing dengan Picsum Unique Seeded agar tidak kembar)
-  const getRumahAdatFoto = (wilayah, index, nama) => {
-    // Kombinasi foto arsitektur Nusantara yang robust dengan filter khusus
-    const basePhotos = {
-      'Sumatera': 'https://images.unsplash.com/photo-1501179691627-eeaa65ea017c?q=80&w=500&auto=format&fit=crop',
-      'Jawa': 'https://images.unsplash.com/photo-1588693959306-bf2e74af35fe?q=80&w=500&auto=format&fit=crop',
-      'Bali': 'https://images.unsplash.com/photo-1555400038-63f5ba517a47?q=80&w=500&auto=format&fit=crop',
-      'Nusa Tenggara': 'https://images.unsplash.com/photo-1558228581-2856f62b2ac3?q=80&w=500&auto=format&fit=crop',
-      'Kalimantan': 'https://images.unsplash.com/photo-1537996194471-e657df975ab4?q=80&w=500&auto=format&fit=crop',
-      'Sulawesi': 'https://images.unsplash.com/photo-1518548419970-58e3b4079ab2?q=80&w=500&auto=format&fit=crop',
-    }
-    
-    // Memberikan ID unik pada Picsum untuk mendapatkan 38 foto berbeda bagi provinsi yang wilayahnya sama
-    // Ini memastikan seluruh 38 provinsi memiliki foto yang *berbeda* secara visual.
-    const fallback = basePhotos[wilayah] || 'https://images.unsplash.com/photo-1533087353988-cb86c673ba1f?q=80&w=500&auto=format&fit=crop';
-    
-    // Ganjil genap: separuh pakai foto robust budaya, separuh pakai foto unik placeholder
-    if (index % 2 === 0 || index % 3 === 0) {
-      return `https://picsum.photos/seed/${nama.replace(/\s/g, '')}/500/600`;
-    }
-    
-    return fallback;
+  // Foto representatif per provinsi — Unsplash verified (tidak diblokir hotlink)
+  const fotoProvinsi = {
+    // ── Sumatera ──
+    'Aceh': 'https://storage.googleapis.com/jm-content/img/large_1_Gambar_Rumah_Adat_aceh_1af653b0ea/large_1_Gambar_Rumah_Adat_aceh_1af653b0ea.jpg', // Masjid Aceh
+    'Sumatera Utara': 'https://storage.googleapis.com/jm-content/img/large_2_Gambar_Rumah_sumatra_utara_6229be5b79/large_2_Gambar_Rumah_sumatra_utara_6229be5b79.jpg', // Danau Toba / Batak
+    'Sumatera Barat': 'https://storage.googleapis.com/jm-content/img/large_Blog_Images_1800_x_1200_px_2_ac2dfc699b/large_Blog_Images_1800_x_1200_px_2_ac2dfc699b.png',    // Rumah Gadang Minangkabau
+    'Riau': 'https://storage.googleapis.com/jm-content/img/large_3_Gambar_Rumah_Adat_riau_51bd170feb/large_3_Gambar_Rumah_Adat_riau_51bd170feb.jpg', // Hutan tropis / Riau
+    'Kepulauan Riau': 'https://www.melayupedia.com/foto_berita/2021/07/2021-07-13-indahnya-4-pulau-di-kepulauan-riau-surganya-dunia-anambas.jpg', // Pulau tropis Kepri
+    'Jambi': 'https://storage.googleapis.com/jm-content/img/large_Blog_Images_1800_x_1200_px_3_c2e00d6a23/large_Blog_Images_1800_x_1200_px_3_c2e00d6a23.png', // Hutan Kerinci / Jambi
+    'Bengkulu': 'https://storage.googleapis.com/jm-content/img/large_Blog_Images_1800_x_1200_px_4_9cb7f4d43c/large_Blog_Images_1800_x_1200_px_4_9cb7f4d43c.png', // Pantai Bengkulu
+    'Sumatera Selatan': 'https://dynamic-media-cdn.tripadvisor.com/media/photo-o/0f/1f/cc/ff/jembatan-ampera-palembang.jpg?w=700&h=-1&s=1', // Ampera / Palembang
+    'Bangka Belitung': 'https://storage.googleapis.com/jm-content/img/large_9_Gambar_Rumah_Adat_Bangka_belitung_31ed99c008/large_9_Gambar_Rumah_Adat_Bangka_belitung_31ed99c008.jpg', // Pantai berbatu Belitung
+    'Lampung': 'https://storage.googleapis.com/jm-content/img/large_10_Gambar_Rumah_Adat_Lampung_001830e491/large_10_Gambar_Rumah_Adat_Lampung_001830e491.jpg',    // Gajah Lampung
+    // ── Jawa ──
+    'Banten': 'https://storage.googleapis.com/jm-content/img/large_16_Gambar_Rumah_Adat_Banten_601588e0e4/large_16_Gambar_Rumah_Adat_Banten_601588e0e4.jpg', // Alam Banten
+    'DKI Jakarta': 'https://storage.googleapis.com/jm-content/img/large_17_Gambar_Rumah_Adat_Dki_Jakarta_005be7af0c/large_17_Gambar_Rumah_Adat_Dki_Jakarta_005be7af0c.jpg',    // Skyline Jakarta
+    'Jawa Barat': 'https://storage.googleapis.com/jm-content/img/large_18_Gambar_Rumah_Adat_Jawa_Barat_6859711c63/large_18_Gambar_Rumah_Adat_Jawa_Barat_6859711c63.jpg', // Sawah terasering
+    'Jawa Tengah': 'https://storage.googleapis.com/jm-content/img/large_19_Gambar_Rumah_Adat_Joglo_Jawa_tengah_a6b5128c38/large_19_Gambar_Rumah_Adat_Joglo_Jawa_tengah_a6b5128c38.jpg', // Candi Borobudur
+    'DI Yogyakarta': 'https://kotajogja.co.id/wp-content/uploads/2023/12/Keindahan-Sunset-di-Kawasan-Wisata-Tugu-Jogja-1024x576.jpg', // Prambanan Yogyakarta
+    'Jawa Timur': 'https://storage.googleapis.com/jm-content/img/large_21_Gambar_Rumah_Adat_Jawa_Timur_14f37bb594/large_21_Gambar_Rumah_Adat_Jawa_Timur_14f37bb594.jpg', // Gunung Bromo
+    // ── Bali & Nusa Tenggara ──
+    'Bali': 'https://storage.googleapis.com/jm-content/img/large_28_Gambar_Rumah_Adat_Kep_Bali_f5e74d5fb5/large_28_Gambar_Rumah_Adat_Kep_Bali_f5e74d5fb5.jpg',    // Pura Bali
+    'Nusa Tenggara Barat': 'https://storage.googleapis.com/jm-content/img/large_29_Gambar_Rumah_Adat_NTB_aef08c7acc/large_29_Gambar_Rumah_Adat_NTB_aef08c7acc.jpg',    // Komodo / NTB
+    'Nusa Tenggara Timur': 'https://storage.googleapis.com/jm-content/img/large_30_Gambar_Rumah_Adat_NTT_facb68a90b/large_30_Gambar_Rumah_Adat_NTT_facb68a90b.jpg', // Labuan Bajo NTT
+    // ── Kalimantan ──
+    'Kalimantan Barat': 'https://storage.googleapis.com/jm-content/img/large_12_Gambar_Rumah_Adat_Kalbar_a6b812838d/large_12_Gambar_Rumah_Adat_Kalbar_a6b812838d.jpg', // Hutan Borneo
+    'Kalimantan Tengah': 'https://storage.googleapis.com/jm-content/img/large_14_Gambar_Rumah_Adat_Kalteng_f3622aec56/large_14_Gambar_Rumah_Adat_Kalteng_f3622aec56.jpg', // Hutan Kalteng
+    'Kalimantan Selatan': 'https://storage.googleapis.com/jm-content/img/large_15_Gambar_Rumah_Adat_Kalsel_3824c2cc74/large_15_Gambar_Rumah_Adat_Kalsel_3824c2cc74.jpg', // Sungai Banjarmasin
+    'Kalimantan Timur': 'https://storage.googleapis.com/jm-content/img/large_13_Gambar_Rumah_Adat_Kaltim_b96ebb4780/large_13_Gambar_Rumah_Adat_Kaltim_b96ebb4780.jpg', // Hutan Kaltim
+    'Kalimantan Utara': 'https://storage.googleapis.com/jm-content/img/large_11_Gambar_Rumah_Adat_Baloy_be930e005c/large_11_Gambar_Rumah_Adat_Baloy_be930e005c.jpg', // Pegunungan Kaltara
+    // ── Sulawesi ──
+    'Sulawesi Utara': 'https://storage.googleapis.com/jm-content/img/large_22_Gambar_Rumah_Adat_Sulut_74ab70d647/large_22_Gambar_Rumah_Adat_Sulut_74ab70d647.jpg',    // Laut Bunaken
+    'Gorontalo': 'https://storage.googleapis.com/jm-content/img/large_23_Gambar_Rumah_Adat_Gorontalo_fa9bc82ac2/large_23_Gambar_Rumah_Adat_Gorontalo_fa9bc82ac2.jpg', // Pantai Gorontalo
+    'Sulawesi Tengah': 'https://storage.googleapis.com/jm-content/img/large_24_Gambar_Rumah_Adat_Sulteng_c590602e4f/large_24_Gambar_Rumah_Adat_Sulteng_c590602e4f.jpg', // Danau Sulawesi Tengah
+    'Sulawesi Barat': 'https://www.99.co/id/panduan/wp-content/uploads/2022/06/26135840/rumah-adat-mandar.jpg', // Pantai Sulbar
+    'Sulawesi Selatan': 'https://storage.googleapis.com/jm-content/img/large_26_Gambar_Rumah_Adat_Sulsel_5df46c5d45/large_26_Gambar_Rumah_Adat_Sulsel_5df46c5d45.jpg', // Makassar Sulsel
+    'Sulawesi Tenggara': 'https://storage.googleapis.com/jm-content/img/large_27_Gambar_Rumah_Adat_Sulbar_66dd767cc7/large_27_Gambar_Rumah_Adat_Sulbar_66dd767cc7.jpg',    // Wakatobi
+    // ── Maluku & Papua ──
+    'Maluku': 'https://storage.googleapis.com/jm-content/img/large_31_Gambar_Rumah_Adat_Maluku_dad359fa2d/large_31_Gambar_Rumah_Adat_Maluku_dad359fa2d.jpg', // Laut biru Maluku
+    'Maluku Utara': 'https://storage.googleapis.com/jm-content/img/large_32_Gambar_Rumah_Adat_Maluku_Utara_2f57c189bb/large_32_Gambar_Rumah_Adat_Maluku_Utara_2f57c189bb.jpg', // Ternate Tidore
+    'Papua': 'https://storage.googleapis.com/jm-content/img/large_34_Gambar_Rumah_Adat_Honai_papua_cce0734b9e/large_34_Gambar_Rumah_Adat_Honai_papua_cce0734b9e.jpg', // Raja Ampat Papua
+    'Papua Barat': 'https://storage.googleapis.com/jm-content/img/large_33_Gambar_Rumah_Adat_Papua_Barat_98742be446/large_33_Gambar_Rumah_Adat_Papua_Barat_98742be446.jpg', // Pantai Papua Barat
+    'Papua Selatan': 'https://www.indonesia.travel/contentassets/75b9ffdd657845e2912e932f39cf57f5/southpapua_1.jpeg', // Hutan Papua Selatan
+    'Papua Tengah': 'https://storage.googleapis.com/jm-content/img/large_37_Gambar_Rumah_Adat_Papua_Tengah_0969acfbb7/large_37_Gambar_Rumah_Adat_Papua_Tengah_0969acfbb7.jpg', // Pegunungan Papua Tengah
+    'Papua Pegunungan': 'https://storage.googleapis.com/jm-content/img/large_35_Gambar_Rumah_Adat_Papua_Pegunungan_4f1552e440/large_35_Gambar_Rumah_Adat_Papua_Pegunungan_4f1552e440.jpg', // Peg. Jayawijaya
+    'Papua Barat Daya': 'https://storage.googleapis.com/jm-content/img/large_36_Gambar_Rumah_Adat_Papua_Barat_Daya_968c131b69/large_36_Gambar_Rumah_Adat_Papua_Barat_Daya_968c131b69.jpg', // Pulau Papua Barat Daya
   }
+
+  // Fallback per wilayah jika foto gagal load
+  const fallbackFoto = {
+    'Sumatera': 'https://images.unsplash.com/photo-1501179691627-eeaa65ea017c?w=600&q=80',
+    'Jawa': 'https://images.unsplash.com/photo-1604999333679-b86d54738315?w=600&q=80',
+    'Bali': 'https://images.unsplash.com/photo-1555400038-63f5ba517a47?w=600&q=80',
+    'Nusa Tenggara': 'https://images.unsplash.com/photo-1558228581-2856f62b2ac3?w=600&q=80',
+    'Kalimantan': 'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=600&q=80',
+    'Sulawesi': 'https://images.unsplash.com/photo-1499678329028-101435549a4e?w=600&q=80',
+    'Maluku': 'https://images.unsplash.com/photo-1426604966848-d7adac402bff?w=600&q=80',
+    'Papua': 'https://images.unsplash.com/photo-1516026672322-bc52d61a55d5?w=600&q=80',
+  }
+
+  const getFotoProvinsi = (nama, wilayah) =>
+    fotoProvinsi[nama] || fallbackFoto[wilayah] || 'https://images.unsplash.com/photo-1501179691627-eeaa65ea017c?w=600&q=80'
+
 
   // Fungsi scroll slider ke kiri/kanan
   const scrollSlider = (direction) => {
     if (sliderRef.current) {
-      const scrollAmount = 300; // Jarak scroll
+      const scrollAmount = 320;
       sliderRef.current.scrollBy({ left: direction === 'left' ? -scrollAmount : scrollAmount, behavior: 'smooth' });
     }
   }
+
 
   // 8 peribahasa dari 8 wilayah berbeda Nusantara
   const peribahasa = [
@@ -387,83 +428,69 @@ export default function LandingPage() {
       </section>
 
       {/* ─── DARI SABANG SAMPAI MERAUKE ──────────────────────────── */}
-      <section className="section" style={{ background: 'var(--bg)', paddingTop: '4rem', paddingBottom: '4rem' }}>
-        <div className="container" style={{ maxWidth: '1200px' }}>
-          <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', marginBottom: '2.5rem' }}>
-            <div>
+      <section className="provinsi-section">
+        <div className="provinsi-section-inner">
+          {/* Header */}
+          <div className="provinsi-header">
+            <div className="provinsi-header-text">
               <span className="section-label">Dari Sabang sampai Merauke</span>
-              <h2 className="section-title" style={{ fontSize: '2rem', marginBottom: '0.75rem', textAlign: 'left' }}>Hadir di 38 Provinsi Nusantara</h2>
-              <p className="section-subtitle" style={{ margin: '0', maxWidth: '600px', textAlign: 'left' }}>
-                Memastikan seluruh pelosok negeri, tanpa terkecuali, dapat terhubung dan menikmati transformasi pelayanan publik secara digital.
+              <h2 className="section-title provinsi-title">Hadir di 38 Provinsi Nusantara</h2>
+              <p className="section-subtitle provinsi-subtitle">
+                Memastikan seluruh pelosok negeri, tanpa terkecuali, dapat terhubung
+                dan menikmati transformasi pelayanan publik secara digital.
               </p>
             </div>
-            
-            {/* Tombol Navigasi Slider */}
-            <div style={{ display: 'flex', gap: '0.75rem' }}>
-              <button onClick={() => scrollSlider('left')} style={{ 
-                width: 44, height: 44, borderRadius: '50%', background: 'var(--surface)', 
-                border: '1px solid var(--border)', display: 'flex', alignItems: 'center', justifyContent: 'center',
-                cursor: 'pointer', color: 'var(--text)'
-              }} aria-label="Scroll Kiri">
+            {/* Tombol Navigasi Modern */}
+            <div className="provinsi-nav-btns">
+              <button onClick={() => scrollSlider('left')} className="provinsi-nav-btn" aria-label="Scroll Kiri">
                 <ChevronLeft size={20} />
               </button>
-              <button onClick={() => scrollSlider('right')} style={{ 
-                width: 44, height: 44, borderRadius: '50%', background: 'var(--surface)', 
-                border: '1px solid var(--border)', display: 'flex', alignItems: 'center', justifyContent: 'center',
-                cursor: 'pointer', color: 'var(--text)'
-              }} aria-label="Scroll Kanan">
+              <button onClick={() => scrollSlider('right')} className="provinsi-nav-btn provinsi-nav-btn--active" aria-label="Scroll Kanan">
                 <ChevronRight size={20} />
               </button>
             </div>
           </div>
-          
-          {/* Container Slider Horizontal */}
-          <div ref={sliderRef} style={{
-            display: 'flex', gap: '1.25rem',
-            overflowX: 'auto', paddingBottom: '1.5rem',
-            scrollSnapType: 'x mandatory',
-            marginLeft: 'calc(-50vw + 50%)',
-            marginRight: 'calc(-50vw + 50%)',
-            paddingLeft: 'max(1rem, calc(50vw - 600px))', /* Sesuaikan dengan max-width container 1200px */
-            paddingRight: 'max(1rem, calc(50vw - 600px))',
-            WebkitOverflowScrolling: 'touch',
-            scrollbarWidth: 'none' /* Sembunyikan scrollbar untuk UI minimalis */
-          }} className="hide-scrollbar">
+
+          {/* Slider Track */}
+          <div ref={sliderRef} className="provinsi-slider hide-scrollbar">
             {daftarProvinsi.map((p, i) => {
-              const foto = getRumahAdatFoto(p.wilayah, i, p.nama);
+              const foto = getFotoProvinsi(p.nama, p.wilayah);
               return (
-                <div key={i} style={{
-                  minWidth: '220px', maxWidth: '240px', height: '300px',
-                  borderRadius: 'var(--radius-lg)', position: 'relative', overflow: 'hidden',
-                  scrollSnapAlign: 'start', flexShrink: 0,
-                  boxShadow: '0 4px 12px rgba(0,0,0,0.08)'
-                }}>
-                  <img src={foto} alt={`Rumah Adat / Nuansa ${p.nama}`} style={{ width: '100%', height: '100%', objectFit: 'cover' }} loading="lazy" />
-                  <div style={{
-                    position: 'absolute', inset: 0,
-                    background: 'linear-gradient(135deg, rgba(0,32,26,0.3) 0%, rgba(0,0,0,0.1) 100%)' // Subtle color filter to blend generic photos
-                  }} />
-                  <div style={{
-                    position: 'absolute', inset: 0,
-                    background: 'linear-gradient(to top, rgba(0,32,26,0.95) 0%, rgba(0,32,26,0.4) 60%, rgba(0,0,0,0) 100%)'
-                  }} />
-                  <div style={{
-                    position: 'absolute', bottom: 0, left: 0, right: 0, padding: '1.5rem 1.25rem'
-                  }}>
-                    <span style={{ 
-                      display: 'inline-block', padding: '0.2rem 0.5rem', background: 'var(--primary)', 
-                      color: 'white', fontSize: '0.65rem', fontWeight: 700, borderRadius: 'var(--radius-sm)', 
-                      letterSpacing: '0.05em', textTransform: 'uppercase', marginBottom: '0.5rem' 
-                    }}>
-                      {p.wilayah}
-                    </span>
-                    <strong style={{ display: 'block', color: 'white', fontSize: '1.1rem', marginBottom: '0.25rem', lineHeight: 1.2 }}>
-                      {p.nama}
-                    </strong>
+                <div key={i} className="provinsi-card">
+                  {/* Foto Rumah Adat */}
+                  <img
+                    src={foto}
+                    alt={`Rumah Adat ${p.nama}`}
+                    className="provinsi-card-img"
+                    loading="lazy"
+                    onError={(e) => { e.target.src = fallbackFoto[p.wilayah] || 'https://images.unsplash.com/photo-1501179691627-eeaa65ea017c?q=80&w=600&auto=format&fit=crop' }}
+                  />
+                  {/* Gradients */}
+                  <div className="provinsi-card-grad-top" />
+                  <div className="provinsi-card-grad-bottom" />
+                  {/* Badge wilayah */}
+                  <div className="provinsi-card-badge">
+                    {p.wilayah}
                   </div>
+                  {/* Info bawah */}
+                  <div className="provinsi-card-info">
+                    <p className="provinsi-card-region">Indonesia</p>
+                    <strong className="provinsi-card-name">{p.nama}</strong>
+                    <div className="provinsi-card-line" />
+                  </div>
+                  {/* Hover overlay shimmer */}
+                  <div className="provinsi-card-shimmer" />
                 </div>
               );
             })}
+          </div>
+
+          {/* Scroll indicator dots */}
+          <div className="provinsi-scroll-hint">
+            <span className="provinsi-scroll-dot provinsi-scroll-dot--active" />
+            <span className="provinsi-scroll-dot" />
+            <span className="provinsi-scroll-dot" />
+            <span className="provinsi-scroll-text">Geser untuk melihat semua provinsi</span>
           </div>
         </div>
       </section>
@@ -644,9 +671,9 @@ export default function LandingPage() {
             display: 'flex', justifyContent: 'center', gap: '0.875rem',
             marginBottom: '1.25rem', opacity: 0.12
           }}>
-            {['\u1BD4','\u1A12','\u1B13','\uA9A4','\u1B94','\uA936'].map((c, i) => (
+            {['\u1BD4', '\u1A12', '\u1B13', '\uA9A4', '\u1B94', '\uA936'].map((c, i) => (
               <span key={i} style={{
-                fontFamily: i===0?'Noto Sans Batak,serif':i===1?'Noto Sans Buginese,serif':i===2?'Noto Sans Balinese,serif':i===3?'Noto Sans Javanese,serif':i===4?'Noto Sans Sundanese,serif':'serif',
+                fontFamily: i === 0 ? 'Noto Sans Batak,serif' : i === 1 ? 'Noto Sans Buginese,serif' : i === 2 ? 'Noto Sans Balinese,serif' : i === 3 ? 'Noto Sans Javanese,serif' : i === 4 ? 'Noto Sans Sundanese,serif' : 'serif',
                 fontSize: '2rem', color: 'rgba(255,255,255,0.5)', lineHeight: 1
               }}>{c}</span>
             ))}

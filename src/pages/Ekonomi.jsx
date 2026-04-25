@@ -3,6 +3,19 @@ import { supabase } from '../lib/supabase'
 import { useVillage } from '../contexts/VillageContext'
 import { Store, Home, Search, MapPin, Phone, Filter } from 'lucide-react'
 
+// Fungsi helper: Mengubah GDrive url ke format yang bisa di-embed
+const getDirectImageUrl = (url) => {
+  if (!url) return '';
+  let id = '';
+  const matchD = url.match(/\/d\/([a-zA-Z0-9_-]+)/);
+  if (matchD) id = matchD[1];
+  else {
+    const matchId = url.match(/id=([a-zA-Z0-9_-]+)/);
+    if (matchId) id = matchId[1];
+  }
+  return id ? `https://lh3.googleusercontent.com/d/${id}` : url;
+}
+
 export default function Ekonomi() {
   const [tab, setTab] = useState('umkm')
   const [umkm, setUmkm] = useState([])
@@ -24,22 +37,8 @@ export default function Ekonomi() {
     fetch()
   }, [villageId])
 
-  const defaultUmkm = [
-    { id: 1, name: 'Batik Kepuh Motif Mega Mendung', price: 350000, category: 'Kerajinan', owner_name: 'Ibu Siti', contact: '081234567890', description: 'Batik tulis khas Padukuhan Kepuh' },
-    { id: 2, name: 'Keripik Singkong Pedas', price: 15000, category: 'Makanan', owner_name: 'Pak Budi', contact: '081234567891', description: 'Keripik singkong renyah dengan bumbu pedas' },
-    { id: 3, name: 'Madu Hutan Asli', price: 85000, category: 'Minuman', owner_name: 'Pak Agus', contact: '081234567892', description: 'Madu hutan asli dari lebah ternak' },
-    { id: 4, name: 'Anyaman Bambu Dekoratif', price: 75000, category: 'Kerajinan', owner_name: 'Ibu Dewi', contact: '081234567893', description: 'Anyaman bambu untuk hiasan rumah' },
-    { id: 5, name: 'Kopi Robusta Kepuh', price: 45000, category: 'Minuman', owner_name: 'Pak Hendra', contact: '081234567894', description: 'Kopi robusta pilihan dari kebun desa' },
-    { id: 6, name: 'Sambal Terasi Bu Mul', price: 25000, category: 'Makanan', owner_name: 'Bu Mulyani', contact: '081234567895', description: 'Sambal terasi homemade resep turun temurun' },
-  ]
-
-  const defaultKost = [
-    { id: 1, title: 'Kost Putra Dekat Balai Desa', price: 500000, location: 'RT 03/RW 01', contact: '081234567800', facilities: 'WiFi, Kamar Mandi Dalam, Parkir Motor', description: 'Kost putra nyaman dengan fasilitas lengkap' },
-    { id: 2, title: 'Kontrakan 2 Kamar Tidur', price: 1200000, location: 'RT 05/RW 02', contact: '081234567801', facilities: 'Dapur, Kamar Mandi, Taman Kecil', description: 'Rumah kontrakan cocok untuk keluarga kecil' },
-  ]
-
-  const displayUmkm = umkm.length > 0 ? umkm : defaultUmkm
-  const displayKost = kost.length > 0 ? kost : defaultKost
+  const displayUmkm = umkm
+  const displayKost = kost
 
   const categories = ['all', ...new Set(displayUmkm.map(p => p.category))]
 
@@ -113,10 +112,14 @@ export default function Ekonomi() {
               <div className="grid grid-3">
                 {filteredUmkm.map(product => (
                   <div key={product.id} className="card">
-                    <div className="card-img" style={{ background: 'linear-gradient(135deg, var(--accent-light), var(--accent))', height: 180 }}>
-                      <div className="flex-center" style={{ height: '100%' }}>
-                        <Store size={36} style={{ color: 'white' }} />
-                      </div>
+                    <div className="card-img" style={{ background: 'var(--primary-bg)', height: 180 }}>
+                      {product.image_url ? (
+                        <img src={getDirectImageUrl(product.image_url)} alt={product.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} referrerPolicy="no-referrer" />
+                      ) : (
+                        <div className="flex-center" style={{ height: '100%' }}>
+                          <Store size={36} style={{ color: 'var(--primary-light)' }} />
+                        </div>
+                      )}
                     </div>
                     <div className="card-body">
                       <span className="badge badge-primary" style={{ marginBottom: '0.5rem' }}>{product.category}</span>
@@ -150,14 +153,26 @@ export default function Ekonomi() {
               <div className="grid grid-2">
                 {filteredKost.map(item => (
                   <div key={item.id} className="card-flat" style={{ display: 'flex', gap: '1.5rem' }}>
-                    <div style={{ width: 140, height: 140, borderRadius: 'var(--radius-md)', background: 'linear-gradient(135deg, var(--primary-bg), var(--primary-lighter))', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                      <Home size={32} style={{ color: 'var(--primary-light)' }} />
+                    <div style={{ width: 140, height: 140, borderRadius: 'var(--radius-md)', background: 'var(--primary-bg)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, overflow: 'hidden' }}>
+                      {item.image_url ? (
+                        <img src={getDirectImageUrl(item.image_url)} alt={item.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} referrerPolicy="no-referrer" />
+                      ) : (
+                        <Home size={32} style={{ color: 'var(--primary-light)' }} />
+                      )}
                     </div>
                     <div style={{ flex: 1 }}>
                       <h4 style={{ marginBottom: '0.375rem' }}>{item.title}</h4>
                       <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', marginBottom: '0.5rem' }}>{item.description}</p>
+                      
                       <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.8rem', color: 'var(--text-muted)', marginBottom: '0.375rem' }}>
-                        <MapPin size={14} /> {item.location}
+                        <MapPin size={14} /> 
+                        {item.gmap_link ? (
+                          <a href={item.gmap_link} target="_blank" rel="noreferrer" style={{ color: 'var(--primary)', textDecoration: 'none', fontWeight: 500 }}>
+                            {item.location} <span style={{ fontSize: '0.7rem' }}>(Lihat Peta)</span>
+                          </a>
+                        ) : (
+                          item.location
+                        )}
                       </div>
                       <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)', marginBottom: '0.75rem' }}>Fasilitas: {item.facilities}</p>
                       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>

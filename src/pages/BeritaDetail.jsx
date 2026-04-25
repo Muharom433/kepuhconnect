@@ -4,6 +4,19 @@ import { supabase } from '../lib/supabase'
 import { useVillage } from '../contexts/VillageContext'
 import { ArrowLeft, Calendar, User, Tag } from 'lucide-react'
 
+// Fungsi helper: Jika URL dari GDrive (termasuk format lama uc?export=view), ubah ke CDN lh3
+const getDirectImageUrl = (url) => {
+  if (!url) return '';
+  let id = '';
+  const matchD = url.match(/\/d\/([a-zA-Z0-9_-]+)/);
+  if (matchD) id = matchD[1];
+  else {
+    const matchId = url.match(/id=([a-zA-Z0-9_-]+)/);
+    if (matchId) id = matchId[1];
+  }
+  return id ? `https://lh3.googleusercontent.com/d/${id}` : url;
+}
+
 export default function BeritaDetail() {
   const { slug } = useParams()
   const { villageSlug } = useVillage()
@@ -56,6 +69,13 @@ export default function BeritaDetail() {
               {new Date(article.published_at).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' })}
             </span>
           </div>
+          
+          {article.image_url && (
+            <div style={{ marginBottom: '2.5rem', borderRadius: 'var(--radius-xl)', overflow: 'hidden', boxShadow: '0 12px 32px rgba(0,0,0,0.08)', background: 'var(--primary-bg)' }}>
+              <img src={getDirectImageUrl(article.image_url)} alt={article.title} style={{ width: '100%', maxHeight: '480px', objectFit: 'cover', display: 'block' }} />
+            </div>
+          )}
+
           <div style={{ fontSize: '1.05rem', lineHeight: 1.9, color: 'var(--text-secondary)' }}>
             {article.content?.split('\n').map((p, i) => <p key={i} style={{ marginBottom: '1rem' }}>{p}</p>)}
           </div>

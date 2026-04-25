@@ -4,6 +4,19 @@ import { supabase } from '../lib/supabase'
 import { useVillage } from '../contexts/VillageContext'
 import { Newspaper, Search } from 'lucide-react'
 
+// Fungsi helper: Jika URL dari GDrive (termasuk format lama uc?export=view), ubah ke CDN lh3
+const getDirectImageUrl = (url) => {
+  if (!url) return '';
+  let id = '';
+  const matchD = url.match(/\/d\/([a-zA-Z0-9_-]+)/);
+  if (matchD) id = matchD[1];
+  else {
+    const matchId = url.match(/id=([a-zA-Z0-9_-]+)/);
+    if (matchId) id = matchId[1];
+  }
+  return id ? `https://lh3.googleusercontent.com/d/${id}` : url;
+}
+
 export default function Berita() {
   const [news, setNews] = useState([])
   const [search, setSearch] = useState('')
@@ -91,10 +104,14 @@ export default function Berita() {
             <div className="grid grid-3">
               {filtered.map(item => (
                 <Link to={`/${villageSlug}/berita/${item.slug}`} key={item.id} className="card">
-                  <div className="card-img" style={{ background: 'linear-gradient(135deg, var(--primary-bg), var(--primary-lighter))' }}>
-                    <div className="flex-center" style={{ height: '100%' }}>
-                      <Newspaper size={40} style={{ color: 'var(--primary-light)' }} />
-                    </div>
+                  <div className="card-img" style={{ background: 'var(--primary-bg)' }}>
+                    {item.image_url ? (
+                      <img src={getDirectImageUrl(item.image_url)} alt={item.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                    ) : (
+                      <div className="flex-center" style={{ height: '100%' }}>
+                        <Newspaper size={40} style={{ color: 'var(--primary-light)' }} />
+                      </div>
+                    )}
                   </div>
                   <div className="card-body">
                     <span className="badge badge-primary" style={{ marginBottom: '0.75rem', textTransform: 'capitalize' }}>

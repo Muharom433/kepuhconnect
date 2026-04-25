@@ -69,9 +69,21 @@ export default function UsersManage() {
 
   return (
     <div className="page-enter">
-      <div style={{ marginBottom: '2rem' }}>
-        <h1 style={{ fontSize: 'var(--font-size-3xl)', marginBottom: '0.5rem' }}>Kelola Pengguna</h1>
-        <p style={{ color: 'var(--text-secondary)' }}>Verifikasi dan kelola akun pengguna</p>
+      <div className="admin-page-header">
+        <div>
+          <span className="admin-section-badge" style={{ marginBottom: '0.625rem', display: 'inline-flex' }}>
+            <Users size={10} /> Manajemen
+          </span>
+          <h1 style={{ fontSize: 'var(--font-size-3xl)', marginBottom: '0.25rem', lineHeight: 1.2 }}>Kelola Pengguna</h1>
+          <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem' }}>Verifikasi dan kelola akun pengguna desa</p>
+        </div>
+        <div style={{
+          fontSize: '0.78rem', fontWeight: 600, color: 'var(--primary)',
+          background: 'var(--primary-bg)', border: '1px solid rgba(0,132,79,0.2)',
+          borderRadius: '999px', padding: '0.4rem 1rem'
+        }}>
+          {users.length} pengguna
+        </div>
       </div>
 
       {/* Filters */}

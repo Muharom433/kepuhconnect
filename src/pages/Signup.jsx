@@ -189,8 +189,10 @@ export default function Signup() {
         <div style={{ maxWidth: 520, width: '100%' }}>
           <div className="text-center" style={{ marginBottom: '2rem' }}>
             <div className="navbar-logo" style={{ width: 56, height: 56, fontSize: '1.2rem', margin: '0 auto 1rem', background: 'linear-gradient(135deg, #1a6b3c, #2d9254)' }}>ND</div>
-            <h2>Daftar Akun Baru</h2>
-            <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem' }}>Buat akun untuk mengakses layanan {villageName || 'desa'}</p>
+            <h2>Registrasi Penduduk</h2>
+            <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', lineHeight: 1.5, maxWidth: 400, margin: '0 auto' }}>
+              Daftar sebagai penduduk {villageName || 'desa'} untuk mengakses layanan mandiri seperti permohonan surat KTP, pengantar, dan persuratan lainnya.
+            </p>
           </div>
 
           <div className="card-flat" style={{ padding: '2rem' }}>

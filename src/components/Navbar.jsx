@@ -29,6 +29,7 @@ export default function Navbar() {
       ],
     },
     { label: 'Ekonomi', path: `${base}/ekonomi` },
+    { label: 'Wisata', path: `${base}/wisata` },
     { label: 'Kontak', path: `${base}/kontak` },
   ]
 
@@ -149,7 +150,7 @@ export default function Navbar() {
                   Masuk
                 </Link>
                 <Link to={`${base}/signup`} className="btn btn-sm btn-primary" onClick={() => setMobileOpen(false)}>
-                  Daftar
+                  Registrasi Penduduk
                 </Link>
               </>
             )}

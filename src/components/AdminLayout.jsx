@@ -3,14 +3,14 @@ import { useAuth } from '../contexts/AuthContext'
 import { VillageProvider, useVillage } from '../contexts/VillageContext'
 import {
   LayoutDashboard, Database, FileText, Store,
-  Home, Users, LogOut, Menu, X, ChevronLeft, UserSquare
+  Home, Users, LogOut, Menu, X, ChevronLeft, UserSquare, Map
 } from 'lucide-react'
 import { useState } from 'react'
 import './AdminLayout.css'
 
 function AdminLayoutInner() {
   const { isAdmin, isSuperAdmin, profile, signOut, loading } = useAuth()
-  const { villageSlug, villageName, village, villageId } = useVillage()
+  const { villageSlug, villageName, village, villageId, loading: villageLoading, isNotFound } = useVillage()
   const [collapsed, setCollapsed] = useState(false)
   const location = useLocation()
 
@@ -21,18 +21,37 @@ function AdminLayoutInner() {
     { label: 'Manajemen Data', path: `${base}/data`, icon: Database },
     { label: 'Kelola Persuratan', path: `${base}/persuratan`, icon: FileText },
     { label: 'Kelola UMKM', path: `${base}/umkm`, icon: Store },
+    { label: 'Kelola Kost', path: `${base}/kost`, icon: Home },
+    { label: 'Kelola Wisata', path: `${base}/wisata`, icon: Map },
+    { label: 'Kelola Berita', path: `${base}/berita`, icon: FileText },
     { label: 'Kelola Beranda', path: `${base}/beranda`, icon: Home },
     { label: 'Kependudukan', path: `${base}/penduduk`, icon: UserSquare },
     { label: 'Kelola Users', path: `${base}/users`, icon: Users },
   ]
 
-  if (loading) {
+  // Tunggu KEDUANYA selesai load sebelum cek akses
+  // Ini mencegah redirect prematur saat villageId masih null
+  if (loading || villageLoading) {
     return <div className="loading-screen"><div className="spinner"></div></div>
   }
 
+  // Jika desa tidak ditemukan (atau tidak aktif), jangan redirect ke login, tampilkan pesan error
+  if (isNotFound) {
+    return (
+      <div className="page-enter" style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column' }}>
+        <h2>Desa Tidak Ditemukan</h2>
+        <p style={{ color: 'var(--text-secondary)', marginBottom: '1rem' }}>Desa ini mungkin tidak aktif atau tidak ada.</p>
+        <button className="btn btn-primary" onClick={signOut}>Keluar</button>
+      </div>
+    )
+  }
+
   // Super admin bisa akses admin panel desa manapun
-  const canAccess = isSuperAdmin || (isAdmin && profile?.village_id === villageId)
+  // Gunakan loose equality (==) untuk menghindari masalah tipe data (number vs string)
+  const canAccess = isSuperAdmin || (isAdmin && profile?.village_id == villageId)
+  
   if (!canAccess) {
+    console.warn('Access denied: role=', profile?.role, 'profile.village_id=', profile?.village_id, 'context.villageId=', villageId)
     return <Navigate to={`/${villageSlug}/login`} replace />
   }
 

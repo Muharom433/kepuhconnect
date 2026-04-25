@@ -24,6 +24,7 @@ import Profil from './pages/Profil'
 import Berita from './pages/Berita'
 import BeritaDetail from './pages/BeritaDetail'
 import Ekonomi from './pages/Ekonomi'
+import Wisata from './pages/Wisata'
 import Kontak from './pages/Kontak'
 import Login from './pages/Login'
 import Signup from './pages/Signup'
@@ -38,7 +39,10 @@ import AdminDashboard from './pages/admin/Dashboard'
 import AdminData from './pages/admin/ManajemenData'
 import AdminPersuratan from './pages/admin/Persuratan'
 import AdminUmkm from './pages/admin/UmkmManage'
+import AdminKost from './pages/admin/KostManage'
+import AdminWisata from './pages/admin/WisataManage'
 import AdminBeranda from './pages/admin/BerandaManage'
+import AdminBerita from './pages/admin/BeritaManage'
 import AdminUsers from './pages/admin/UsersManage'
 import AdminPenduduk from './pages/admin/PendudukManage'
 
@@ -81,6 +85,7 @@ export default function App() {
         <Route path="berita" element={<Berita />} />
         <Route path="berita/:slug" element={<BeritaDetail />} />
         <Route path="ekonomi" element={<Ekonomi />} />
+        <Route path="wisata" element={<Wisata />} />
         <Route path="kontak" element={<Kontak />} />
         <Route path="login" element={<Login />} />
         <Route path="signup" element={<Signup />} />
@@ -98,7 +103,10 @@ export default function App() {
         <Route path="data" element={<AdminData />} />
         <Route path="persuratan" element={<AdminPersuratan />} />
         <Route path="umkm" element={<AdminUmkm />} />
+        <Route path="kost" element={<AdminKost />} />
+        <Route path="wisata" element={<AdminWisata />} />
         <Route path="beranda" element={<AdminBeranda />} />
+        <Route path="berita" element={<AdminBerita />} />
         <Route path="users" element={<AdminUsers />} />
         <Route path="penduduk" element={<AdminPenduduk />} />
       </Route>

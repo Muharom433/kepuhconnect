@@ -48,10 +48,13 @@ export default function BerandaManage() {
 
   return (
     <div className="page-enter">
-      <div style={{ marginBottom: '1.5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+      <div className="admin-page-header">
         <div>
-          <h1 style={{ fontSize: 'var(--font-size-3xl)', marginBottom: '0.25rem' }}>Kelola Beranda</h1>
-          <p style={{ color: 'var(--text-secondary)' }}>Edit konten yang ditampilkan di halaman utama</p>
+          <span className="admin-section-badge" style={{ marginBottom: '0.625rem', display: 'inline-flex' }}>
+            <Edit2 size={10} /> Konten
+          </span>
+          <h1 style={{ fontSize: 'var(--font-size-3xl)', marginBottom: '0.25rem', lineHeight: 1.2 }}>Kelola Beranda</h1>
+          <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem' }}>Edit konten yang ditampilkan di halaman utama</p>
         </div>
         <button className="btn btn-outline" onClick={() => iframeRef.current && (iframeRef.current.src = `/${villageSlug}`)}>
           <RefreshCw size={14} /> Segarkan Preview

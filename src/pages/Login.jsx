@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
 import { LogIn, Mail, Lock, AlertCircle, Clock, Shield } from 'lucide-react'
@@ -11,16 +11,17 @@ export default function Login() {
   const [loading, setLoading] = useState(false)
   const { signIn, isLoggedIn, isSuperAdmin, profile } = useAuth()
   const navigate = useNavigate()
+  const redirected = useRef(false)
 
-  // Cek apakah kita di context desa (/:villageSlug/login) atau platform (/login)
-  // Ini bisa dideteksi dari useVillage, tapi Login juga dipake di PlatformLayout
-  // Jadi kita cek profile setelah login untuk redirect
+  // ✅ Redirect setelah login — di dalam useEffect dengan guard agar tidak loop
+  useEffect(() => {
+    if (!isLoggedIn || !profile) return
+    if (redirected.current) return   // sudah redirect, jangan ulangi
+    redirected.current = true
 
-  if (isLoggedIn && profile) {
-    // Redirect berdasarkan role
     if (isSuperAdmin) {
       navigate('/superadmin', { replace: true })
-      return null
+      return
     }
     if (profile.villages?.slug) {
       if (profile.role === 'admin') {
@@ -28,12 +29,10 @@ export default function Login() {
       } else {
         navigate(`/${profile.villages.slug}`, { replace: true })
       }
-      return null
+      return
     }
-    // Jika user tidak punya village, arahkan ke homepage
     navigate('/', { replace: true })
-    return null
-  }
+  }, [isLoggedIn, profile, isSuperAdmin])  // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleSubmit = async (e) => {
     e.preventDefault()
